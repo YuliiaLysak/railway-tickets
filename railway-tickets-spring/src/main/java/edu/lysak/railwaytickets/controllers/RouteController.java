@@ -2,11 +2,9 @@ package edu.lysak.railwaytickets.controllers;
 
 import edu.lysak.railwaytickets.dto.SearchRouteDto;
 import edu.lysak.railwaytickets.model.Route;
-import edu.lysak.railwaytickets.model.Station;
 import edu.lysak.railwaytickets.service.RouteService;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController

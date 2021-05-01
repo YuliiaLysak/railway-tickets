@@ -2,6 +2,7 @@ package edu.lysak.railwaytickets.controllers;
 
 import edu.lysak.railwaytickets.model.Station;
 import edu.lysak.railwaytickets.service.StationService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

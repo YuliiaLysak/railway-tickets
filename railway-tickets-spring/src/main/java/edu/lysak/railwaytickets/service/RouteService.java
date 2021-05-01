@@ -26,15 +26,8 @@ public class RouteService {
     }
 
     public void addNewRoute(Route route) {
-        Station departureStation = route.getDepartureStation();
-        Station departureStationFromDb = stationRepository.findByCityAndName(
-                departureStation.getCity(), departureStation.getName()
-        );
-
-        Station arrivalStation = route.getArrivalStation();
-        Station arrivalStationFromDb = stationRepository.findByCityAndName(
-                arrivalStation.getCity(), arrivalStation.getName()
-        );
+        Station departureStationFromDb = getStationByCityAndName(route.getDepartureStation());
+        Station arrivalStationFromDb = getStationByCityAndName(route.getArrivalStation());
 
         route.setDepartureStation(departureStationFromDb);
         route.setArrivalStation(arrivalStationFromDb);
@@ -51,18 +44,13 @@ public class RouteService {
                 .orElseThrow(() -> new IllegalStateException(String.format(
                         "Route with id = %d doesn't exist", routeId)));
 
-        Station departureStation = route.getDepartureStation();
-        Station departureStationFromDb = stationRepository.findByCityAndName(
-                departureStation.getCity(), departureStation.getName()
-        );
+        Station departureStationFromDb = getStationByCityAndName(route.getDepartureStation());
+        Station arrivalStationFromDb = getStationByCityAndName(route.getArrivalStation());
+
         if (departureStationFromDb != null) {
             updatedRoute.setDepartureStation(departureStationFromDb);
         }
 
-        Station arrivalStation = route.getArrivalStation();
-        Station arrivalStationFromDb = stationRepository.findByCityAndName(
-                arrivalStation.getCity(), arrivalStation.getName()
-        );
         if (arrivalStationFromDb != null) {
             updatedRoute.setArrivalStation(arrivalStationFromDb);
         }
@@ -94,20 +82,17 @@ public class RouteService {
 
     // TODO - add check for available seats and not null stations
     public List<Route> getAvailableRoutes(SearchRouteDto searchRouteDto) {
-        Station departureStation = searchRouteDto.getDepartureStation();
-        Station departureStationFromDb = stationRepository.findByCityAndName(
-                departureStation.getCity(), departureStation.getName()
-        );
-
-        Station arrivalStation = searchRouteDto.getArrivalStation();
-        Station arrivalStationFromDb = stationRepository.findByCityAndName(
-                arrivalStation.getCity(), arrivalStation.getName()
-        );
+        Station departureStationFromDb = getStationByCityAndName(searchRouteDto.getDepartureStation());
+        Station arrivalStationFromDb = getStationByCityAndName(searchRouteDto.getArrivalStation());
 
         return routeRepository.findAvailableRoutes(
                 departureStationFromDb,
                 arrivalStationFromDb,
                 searchRouteDto.getDepartureDate().atStartOfDay()
         );
+    }
+
+    private Station getStationByCityAndName(Station station) {
+        return stationRepository.findByCityAndName(station.getCity(), station.getName());
     }
 }
