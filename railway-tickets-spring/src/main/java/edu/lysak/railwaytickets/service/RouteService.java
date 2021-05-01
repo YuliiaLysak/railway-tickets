@@ -1,5 +1,6 @@
 package edu.lysak.railwaytickets.service;
 
+import edu.lysak.railwaytickets.dto.SearchRouteDto;
 import edu.lysak.railwaytickets.model.Route;
 import edu.lysak.railwaytickets.model.Station;
 import edu.lysak.railwaytickets.repository.RouteRepository;
@@ -89,5 +90,24 @@ public class RouteService {
         }
 
         routeRepository.save(updatedRoute);
+    }
+
+    // TODO - add check for available seats and not null stations
+    public List<Route> getAvailableRoutes(SearchRouteDto searchRouteDto) {
+        Station departureStation = searchRouteDto.getDepartureStation();
+        Station departureStationFromDb = stationRepository.findByCityAndName(
+                departureStation.getCity(), departureStation.getName()
+        );
+
+        Station arrivalStation = searchRouteDto.getArrivalStation();
+        Station arrivalStationFromDb = stationRepository.findByCityAndName(
+                arrivalStation.getCity(), arrivalStation.getName()
+        );
+
+        return routeRepository.findAvailableRoutes(
+                departureStationFromDb,
+                arrivalStationFromDb,
+                searchRouteDto.getDepartureDate().atStartOfDay()
+        );
     }
 }

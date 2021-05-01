@@ -1,9 +1,12 @@
 package edu.lysak.railwaytickets.controllers;
 
+import edu.lysak.railwaytickets.dto.SearchRouteDto;
 import edu.lysak.railwaytickets.model.Route;
+import edu.lysak.railwaytickets.model.Station;
 import edu.lysak.railwaytickets.service.RouteService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -33,5 +36,10 @@ public class RouteController {
     @PutMapping("{routeId}")
     public void updateRoute(@PathVariable Long routeId, @RequestBody Route route) {
         routeService.updateRoute(routeId, route);
+    }
+
+    @PostMapping("/search")
+    public List<Route> getAvailableRoutes(@RequestBody SearchRouteDto searchRouteDto) {
+        return routeService.getAvailableRoutes(searchRouteDto);
     }
 }
