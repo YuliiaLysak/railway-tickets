@@ -22,4 +22,14 @@ public interface RouteRepository extends JpaRepository<Route, Long> {
             @Param("arrivalStation") Station arrivalStation,
             @Param("departureDate") LocalDateTime departureDate
     );
+
+    @Query("SELECT route FROM Route route" +
+            " WHERE route.departureStation = :departureStation" +
+            " AND route.arrivalStation = :arrivalStation" +
+            " AND route.departureTime = :departureDate")
+    Route findRoute(
+            @Param("departureStation") Station departureStation,
+            @Param("arrivalStation") Station arrivalStation,
+            @Param("departureDate") LocalDateTime departureDate
+    );
 }

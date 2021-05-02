@@ -2,7 +2,6 @@ package edu.lysak.railwaytickets.controllers;
 
 import edu.lysak.railwaytickets.model.Station;
 import edu.lysak.railwaytickets.service.StationService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,17 +20,17 @@ public class StationController {
         return stationService.getAllStations();
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public void addNewStation(@RequestBody Station station) {
         stationService.addNewStation(station);
     }
 
-    @DeleteMapping("{stationId}")
+    @DeleteMapping("/{stationId}")
     public void deleteStation(@PathVariable Long stationId) {
         stationService.deleteStation(stationId);
     }
 
-    @PutMapping("{stationId}")
+    @PutMapping("/{stationId}/edit")
     public void updateStation(@PathVariable Long stationId, @RequestBody Station station) {
         stationService.updateStation(stationId, station);
     }

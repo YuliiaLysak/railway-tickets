@@ -35,10 +35,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/registration")
+                .antMatchers(
+                        "/",
+                        "/registration",
+                        "/api/routes",
+                        "/api/routes/search",   //todo - check if it is working
+                        "/api/stations")
                 .permitAll()
-                .antMatchers("/api/routes/**", "/api/stations/**")
+                .antMatchers(
+                        "/api/routes/*",
+                        "/api/stations/*",
+                        "/api/routes/*/edit",   //todo - check if it is working
+                        "/api/stations/*/edit") //todo - check if it is working
                 .hasAuthority("ADMIN")
+                .antMatchers("/api/tickets") //todo - check if it is working
+                .hasAuthority("USER")
                 .anyRequest()
                 .authenticated()
                 .and()

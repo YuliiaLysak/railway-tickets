@@ -1,24 +1,34 @@
 package edu.lysak.railwaytickets.service;
 
-import edu.lysak.railwaytickets.dto.SearchRouteDto;
+import edu.lysak.railwaytickets.dto.SearchRouteRequestDto;
+import edu.lysak.railwaytickets.dto.SearchRouteResponseDto;
 import edu.lysak.railwaytickets.model.Route;
 import edu.lysak.railwaytickets.model.Station;
 import edu.lysak.railwaytickets.repository.RouteRepository;
 import edu.lysak.railwaytickets.repository.StationRepository;
+import edu.lysak.railwaytickets.repository.TicketRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RouteService {
     private final RouteRepository routeRepository;
     private final StationRepository stationRepository;
+    private final TicketRepository ticketRepository;
 
-    public RouteService(RouteRepository routeRepository, StationRepository stationRepository) {
+    public RouteService(
+            RouteRepository routeRepository,
+            StationRepository stationRepository,
+            TicketRepository ticketRepository
+    ) {
         this.routeRepository = routeRepository;
         this.stationRepository = stationRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     public List<Route> getAllRoutes() {
@@ -80,19 +90,72 @@ public class RouteService {
         routeRepository.save(updatedRoute);
     }
 
-    // TODO - add check for available seats and not null stations
-    public List<Route> getAvailableRoutes(SearchRouteDto searchRouteDto) {
-        Station departureStationFromDb = getStationByCityAndName(searchRouteDto.getDepartureStation());
-        Station arrivalStationFromDb = getStationByCityAndName(searchRouteDto.getArrivalStation());
+    // TODO - add check for not null stations
+    public List<SearchRouteResponseDto> getAvailableRoutes(SearchRouteRequestDto searchRouteRequestDto) {
+        Station departureStationFromDb = getStationByCityAndName(searchRouteRequestDto.getDepartureStation());
+        Station arrivalStationFromDb = getStationByCityAndName(searchRouteRequestDto.getArrivalStation());
 
-        return routeRepository.findAvailableRoutes(
+        List<Route> availableRoutes = routeRepository.findAvailableRoutes(
                 departureStationFromDb,
                 arrivalStationFromDb,
-                searchRouteDto.getDepartureDate().atStartOfDay()
+                searchRouteRequestDto.getDepartureDateTime().toLocalDate().atStartOfDay()
         );
+
+        return availableRoutes.stream()
+                .filter(route -> getAvailableSeats(route) > 0)
+                .map(this::createSearchResponse)
+                .collect(Collectors.toList());
+    }
+
+    private SearchRouteResponseDto createSearchResponse(Route route) {
+        SearchRouteResponseDto responseDto = new SearchRouteResponseDto();
+
+        responseDto.setTrainName(route.getTrainName());
+
+        String departureStationName = String.format("%s (%s)",
+                route.getDepartureStation().getCity(), route.getDepartureStation().getName());
+        responseDto.setDepartureStationName(departureStationName);
+
+        responseDto.setDepartureDateTime(route.getDepartureTime());
+
+        long seconds = Duration.between(route.getDepartureTime(), route.getArrivalTime()).toSeconds();
+        String duration = String.format("%d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, (seconds % 60));
+        responseDto.setDuration(duration);
+
+        String arrivalStationName = String.format("%s (%s)",
+                route.getArrivalStation().getCity(), route.getArrivalStation().getName());
+        responseDto.setArrivalStationName(arrivalStationName);
+
+        responseDto.setArrivalDateTime(route.getArrivalTime());
+
+        responseDto.setTotalSeats(route.getTotalSeats());
+
+        responseDto.setAvailableSeats(getAvailableSeats(route));
+
+        responseDto.setPricePerSeat(route.getPricePerSeat());
+        return responseDto;
     }
 
     private Station getStationByCityAndName(Station station) {
         return stationRepository.findByCityAndName(station.getCity(), station.getName());
+    }
+
+    public Route getRoute(SearchRouteRequestDto searchRouteRequestDto) {
+        Station departureStationFromDb = getStationByCityAndName(searchRouteRequestDto.getDepartureStation());
+        Station arrivalStationFromDb = getStationByCityAndName(searchRouteRequestDto.getArrivalStation());
+
+        return routeRepository.findRoute(
+                departureStationFromDb,
+                arrivalStationFromDb,
+                searchRouteRequestDto.getDepartureDateTime()
+        );
+    }
+
+
+    public int getAvailableSeats(Route route) {
+        int totalSeats = route.getTotalSeats();
+        int purchasedSeats = ticketRepository.findPurchasedTickets(route.getId());
+        int availableSeats = totalSeats - purchasedSeats;
+        return Math.max(availableSeats, 0);
     }
 }

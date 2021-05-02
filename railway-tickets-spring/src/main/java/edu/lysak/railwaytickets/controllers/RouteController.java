@@ -1,6 +1,7 @@
 package edu.lysak.railwaytickets.controllers;
 
-import edu.lysak.railwaytickets.dto.SearchRouteDto;
+import edu.lysak.railwaytickets.dto.SearchRouteRequestDto;
+import edu.lysak.railwaytickets.dto.SearchRouteResponseDto;
 import edu.lysak.railwaytickets.model.Route;
 import edu.lysak.railwaytickets.service.RouteService;
 import org.springframework.web.bind.annotation.*;
@@ -21,23 +22,23 @@ public class RouteController {
         return routeService.getAllRoutes();
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public void addNewRoute(@RequestBody Route route) {
         routeService.addNewRoute(route);
     }
 
-    @DeleteMapping("{routeId}")
+    @DeleteMapping("/{routeId}")
     public void deleteRoute(@PathVariable Long routeId) {
         routeService.deleteRoute(routeId);
     }
 
-    @PutMapping("{routeId}")
+    @PutMapping("/{routeId}/edit")
     public void updateRoute(@PathVariable Long routeId, @RequestBody Route route) {
         routeService.updateRoute(routeId, route);
     }
 
     @PostMapping("/search")
-    public List<Route> getAvailableRoutes(@RequestBody SearchRouteDto searchRouteDto) {
-        return routeService.getAvailableRoutes(searchRouteDto);
+    public List<SearchRouteResponseDto> getAvailableRoutes(@RequestBody SearchRouteRequestDto searchRouteRequestDto) {
+        return routeService.getAvailableRoutes(searchRouteRequestDto);
     }
 }
