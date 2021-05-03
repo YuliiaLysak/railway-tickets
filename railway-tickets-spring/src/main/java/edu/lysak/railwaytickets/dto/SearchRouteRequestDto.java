@@ -4,12 +4,12 @@ import edu.lysak.railwaytickets.model.Station;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 public class SearchRouteRequestDto {
     private Station departureStation;
     private Station arrivalStation;
-    private LocalDateTime departureDateTime;
+    private LocalDate departureDate;
 }

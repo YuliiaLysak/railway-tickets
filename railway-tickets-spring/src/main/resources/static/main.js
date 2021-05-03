@@ -2,17 +2,18 @@ $(document).ready(function () {
     $('.search-form').submit(function (event) {
         event.preventDefault();
         var data = $('.search-form').serialize();
+        let departureCity = $('input[name="departureCity"]')[0].value;
+        let arrivalCity = $('input[name="arrivalCity"]')[0].value;
+        let departureDate = $('input[name="departureDate"]')[0].value;
         console.log(data);
         let payload = {
             "departureStation": {
-                "city": "Kyiv",
-                "name": "Kyiv-Pasazhyrsky"
+                "city": departureCity
             },
             "arrivalStation": {
-                "city": "Lviv",
-                "name": "Lviv"
+                "city": arrivalCity
             },
-            "departureDateTime": "2021-06-01T06:50:00"
+            "departureDate": departureDate
         };
         $.ajax({
             type : 'POST',

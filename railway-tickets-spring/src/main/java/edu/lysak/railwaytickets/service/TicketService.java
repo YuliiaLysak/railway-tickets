@@ -19,8 +19,8 @@ public class TicketService {
         this.routeService = routeService;
     }
 
-    public void buyTicket(User user, SearchRouteRequestDto searchRouteRequestDto) {
-        Route route = routeService.getRoute(searchRouteRequestDto);
+    public void buyTicket(User user, Long routeId) {
+        Route route = routeService.findRouteById(routeId);
         if (routeService.getAvailableSeats(route) > 0) {
             Ticket ticket = new Ticket();
             ticket.setOwner(user);

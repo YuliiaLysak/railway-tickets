@@ -1,7 +1,6 @@
 package edu.lysak.railwaytickets.repository;
 
 import edu.lysak.railwaytickets.model.Route;
-import edu.lysak.railwaytickets.model.Station;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,22 +13,14 @@ import java.util.List;
 public interface RouteRepository extends JpaRepository<Route, Long> {
 
     @Query("SELECT route FROM Route route" +
-            " WHERE route.departureStation = :departureStation" +
-            " AND route.arrivalStation = :arrivalStation" +
-            " AND route.departureTime >= :departureDate")
-    List<Route> findAvailableRoutes(
-            @Param("departureStation") Station departureStation,
-            @Param("arrivalStation") Station arrivalStation,
-            @Param("departureDate") LocalDateTime departureDate
-    );
-
-    @Query("SELECT route FROM Route route" +
-            " WHERE route.departureStation = :departureStation" +
-            " AND route.arrivalStation = :arrivalStation" +
-            " AND route.departureTime = :departureDate")
-    Route findRoute(
-            @Param("departureStation") Station departureStation,
-            @Param("arrivalStation") Station arrivalStation,
-            @Param("departureDate") LocalDateTime departureDate
+            " WHERE route.departureStation.city = :departureCity" +
+            " AND route.arrivalStation.city = :arrivalCity" +
+            " AND route.departureTime >= :departureDateStart" +
+            " AND route.departureTime < :departureDateEnd")
+    List<Route> findAvailableRoutesByCities(
+            @Param("departureCity") String departureCity,
+            @Param("arrivalCity") String arrivalCity,
+            @Param("departureDateStart") LocalDateTime departureDateStart,
+            @Param("departureDateEnd") LocalDateTime departureDateEnd
     );
 }
