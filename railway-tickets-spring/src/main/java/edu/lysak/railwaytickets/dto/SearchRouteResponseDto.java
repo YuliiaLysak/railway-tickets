@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class SearchRouteResponseDto {
+    private Long routeId;
     private String trainName;
     private String departureStationName;
     private LocalDateTime departureDateTime;

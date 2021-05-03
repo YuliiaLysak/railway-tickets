@@ -1,11 +1,10 @@
 $(document).ready(function () {
+
     $('.search-form').submit(function (event) {
         event.preventDefault();
-        var data = $('.search-form').serialize();
         let departureCity = $('input[name="departureCity"]')[0].value;
         let arrivalCity = $('input[name="arrivalCity"]')[0].value;
         let departureDate = $('input[name="departureDate"]')[0].value;
-        console.log(data);
         let payload = {
             "departureStation": {
                 "city": departureCity
@@ -23,11 +22,28 @@ $(document).ready(function () {
             data : JSON.stringify(payload)
         })
             .then(response => renderSearchResult(response))
-            .then(it => $('.search-results')[0].innerHTML = it);
+            .then(it => $('.search-results')[0].innerHTML = it)
+
+            // method for handling button to buy a ticket
+            .then(it => {
+                $('.buy-btn').click(function (event) {
+                    event.preventDefault();
+                    let routeId = $(event.target).data('route-id');
+                    $.ajax({
+                        type : 'POST',
+                        url: '/api/tickets?routeId=' + routeId,
+                        contentType: 'application/json',
+                    })
+                        .then(response => alert('You have successfully bought the ticket'));
+                });
+            });
     });
 });
 
 function renderSearchResult(routes) {
+    if (routes.length === 0) {
+        return '<p class="fs-2 text-danger" style="text-align: center;">No available routes</p>';
+    }
     return '<ul class="list-group">'
         + routes.map(route => renderSearchResultLine(route))
             .reduce((a, b) => a + b, '')
@@ -49,14 +65,17 @@ function renderSearchResultLine(route) {
                          </div>
                          <div class="col-sm">${route.duration}</div>
                          <div class="col-sm">
-                             ${route.totalSeats}
-                             ${route.availableSeats}
+                             Available seats: ${route.availableSeats} / ${route.totalSeats}
                          </div>
                          <div class="col-sm">${route.pricePerSeat}</div>
-                         <div class="col-sm">
-                             <button type="button" class="btn btn-info">Buy</button>
-                         </div>
+                         <div class="col-sm">${renderBuyButton(route)}</div>
                      </div>
                  </div>
              </li>`;
+}
+
+function renderBuyButton(route) {
+    return `<button type="button" 
+                    class="buy-btn btn btn-info" 
+                    data-route-id="${route.routeId}">Buy</button>`;
 }

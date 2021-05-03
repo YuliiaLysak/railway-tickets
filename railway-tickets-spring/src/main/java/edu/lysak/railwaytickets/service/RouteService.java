@@ -112,6 +112,8 @@ public class RouteService {
     private SearchRouteResponseDto createSearchResponse(Route route) {
         SearchRouteResponseDto responseDto = new SearchRouteResponseDto();
 
+        responseDto.setRouteId(route.getId());
+
         responseDto.setTrainName(route.getTrainName());
 
         String departureStationName = String.format("%s (%s)",
@@ -121,7 +123,7 @@ public class RouteService {
         responseDto.setDepartureDateTime(route.getDepartureTime());
 
         long seconds = Duration.between(route.getDepartureTime(), route.getArrivalTime()).toSeconds();
-        String duration = String.format("%d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, (seconds % 60));
+        String duration = String.format("%d:%02d", seconds / 3600, (seconds % 3600) / 60);
         responseDto.setDuration(duration);
 
         String arrivalStationName = String.format("%s (%s)",
