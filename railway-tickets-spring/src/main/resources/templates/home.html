@@ -2,11 +2,232 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Spring Security Example</title>
+
+    <!-- Required bootstrap meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous">
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <title>Home page</title>
+
+    <style>
+        .signup-form {
+            width: 390px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+
+        .signup-form h2 {
+            color: #636363;
+            margin: 0 0 15px;
+            text-align: center;
+        }
+
+        .signup-form .lead {
+            font-size: 14px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .signup-form form {
+            border-radius: 1px;
+            margin-bottom: 15px;
+            background: #fff;
+            border: 1px solid #f3f3f3;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+        }
+
+        .signup-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .signup-form label {
+            font-weight: normal;
+            font-size: 13px;
+        }
+
+        .signup-form .form-control {
+            min-height: 38px;
+            box-shadow: none !important;
+            border-width: 0 0 1px 0;
+        }
+
+        .signup-form .input-group-addon {
+            max-width: 42px;
+            text-align: center;
+            background: none;
+            border-width: 0 0 1px 0;
+            padding-left: 5px;
+        }
+
+        .signup-form .btn {
+            font-size: 16px;
+            font-weight: bold;
+            background: #19aa8d;
+            border-radius: 3px;
+            border: none;
+            min-width: 140px;
+            outline: none !important;
+        }
+
+        .signup-form .btn:hover, .signup-form .btn:focus {
+            background: #179b81;
+        }
+
+        .signup-form a {
+            color: #19aa8d;
+            text-decoration: none;
+        }
+
+        .signup-form a:hover {
+            text-decoration: underline;
+        }
+
+        .signup-form .fa {
+            font-size: 21px;
+        }
+
+        .signup-form .fa-envelope {
+            font-size: 17px;
+        }
+
+        .signup-form .fa-check {
+            color: #fff;
+            left: 9px;
+            top: 18px;
+            font-size: 7px;
+            position: absolute;
+        }
+    </style>
+
 </head>
 <body>
-<h1>Welcome!</h1>
+<!--todo - change links in navbar-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <!--        TODO - ADD IMG  -->
+        <!--        <img src="/img/railway.png" alt="railway">-->
+        <a class="navbar-brand" href="/home">Railway tickets</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/api/stations">Stations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/api/routes">Routes</a>
+                </li>
+            </ul>
 
-<p>Click <a th:href="@{/hello}">here</a> to see a greeting.</p>
+
+            <a href="/login" class="me-3">
+                <button class="btn btn-outline-success" type="submit">
+                    Sign in
+                </button>
+            </a>
+
+            <a href="/registration" class="me-3">
+                <button class="btn btn-success" type="submit">
+                    Sign up
+                </button>
+            </a>
+
+            <!--        todo  - hide sign out button -->
+            <form th:action="@{/logout}" method="post">
+                <button class="btn btn-success" type="submit">
+                    Sign out
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!--Start of the button block for changing languages-->
+    <div class="btn-group">
+        <button type="button" class="btn btn-danger dropdown-toggle"
+                data-bs-toggle="dropdown" aria-expanded="false">
+            Language
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">
+                <img src="/img/english.png" width="30">English</a>
+            </li>
+            <li><a class="dropdown-item" href="#">
+                <img src="/img/polish.png" width="30">Polish</a>
+            </li>
+            <li><a class="dropdown-item" href="#">
+                <img src="/img/ukrainian.png" width="30">Ukrainian</a>
+            </li>
+        </ul>
+    </div>
+    <!--End of the button block for changing languages-->
+</nav>
+
+
+<!--Start of the search widget -->
+<div class="signup-form">
+    <form th:action="@{/#}" method="post" class="search-form">
+        <h2>Search</h2>
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" class="form-control" name="departureStation" placeholder="Departure station"
+                       required="required">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" class="form-control" name="arrivalStation" placeholder="Arrival station"
+                       required="required">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <input type="date" class="form-control" name="departureDate" placeholder="Departure date"
+                       required="required">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <input type="time" class="form-control" name="departureTime" placeholder="Departure time"
+                       required="required">
+            </div>
+        </div>
+        <!--        TODO  - center the button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block btn-lg">Search</button>
+        </div>
+    </form>
+</div>
+<!--End of the search widget -->
+
+<!-- Div container which will be filled with main.js -->
+<div class="search-results"></div>
+
+
+<!-- Optional JavaScript; choose one of the two! -->
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+        crossorigin="anonymous"></script>
+
+<!-- Option 2: Separate Popper and Bootstrap JS -->
+<!--
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+-->
+
+<script src="/main.js"></script>
+
 </body>
 </html>

@@ -48,7 +48,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/registration",
                         "/api/routes",
                         "/api/routes/search",   //todo - check if it is working
-                        "/api/stations")
+                        "/api/stations",
+                        "/style.css",
+                        "/main.js"
+//                        "/img/ukrainian.png"//todo - check if it is working
+                )
                 .permitAll()
                 .antMatchers(
                         "/api/routes/*",
