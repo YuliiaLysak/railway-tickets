@@ -21,8 +21,8 @@ public class StationController {
     }
 
     @PostMapping("/new")
-    public void addNewStation(@RequestBody Station station) {
-        stationService.addNewStation(station);
+    public Station addNewStation(@RequestBody Station station) {
+        return stationService.addNewStation(station);
     }
 
     @DeleteMapping("/{stationId}")

@@ -18,8 +18,8 @@ public class StationService {
         return stationRepository.findAll();
     }
 
-    public void addNewStation(Station station) {
-        stationRepository.save(station);
+    public Station addNewStation(Station station) {
+        return stationRepository.save(station);
     }
 
     public void deleteStation(Long stationId) {
