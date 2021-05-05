@@ -23,8 +23,8 @@ public class RouteController {
     }
 
     @PostMapping("/new")
-    public void addNewRoute(@RequestBody Route route) {
-        routeService.addNewRoute(route);
+    public Route addNewRoute(@RequestBody Route route) {
+        return routeService.addNewRoute(route);
     }
 
     @DeleteMapping("/{routeId}")

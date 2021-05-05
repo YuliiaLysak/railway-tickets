@@ -1,9 +1,9 @@
 $(document).ready(function () {
     refreshRoutesData();
 
-    // updateRoute();
-    // deleteRoute();
-    // addRoute();
+    updateRoute();
+    deleteRoute();
+    addRoute();
 });
 
 function refreshRoutesData(selectedRouteId) {
@@ -31,6 +31,108 @@ function refreshRoutesData(selectedRouteId) {
                 $('#pricePerSeat')[0].value = $selectedItem.data('route-price-per-seat');
             });
         });
+}
+
+// TODO - add alert (exception handling Spring boot) that route from the purchased ticket cannot be deleted
+function deleteRoute() {
+    $('.btn-delete').click(function (event) {
+        event.preventDefault();
+        let routeId = $('#routeId')[0].value;
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/routes/' + routeId,
+            contentType: 'application/json'
+        })
+            .always(() => refreshRoutesData(+routeId));
+    });
+}
+
+// TODO - add selecting station from dropdown (to avoid adding route with station that doesnt exist)
+// TODO - add alert that all input should be filled
+function addRoute() {
+    $('.btn-add').click(function (event) {
+        event.preventDefault();
+        let departureStationCity = $('#departureStationCity')[0].value;
+        let departureStationName = $('#departureStationName')[0].value;
+        let arrivalStationCity = $('#arrivalStationCity')[0].value;
+        let arrivalStationName = $('#arrivalStationName')[0].value;
+        let departureTime = $('#departureTime')[0].value;
+        let arrivalTime = $('#arrivalTime')[0].value;
+        let trainName = $('#trainName')[0].value;
+        let totalSeats = $('#totalSeats')[0].value;
+        let pricePerSeat = $('#pricePerSeat')[0].value;
+
+        let payload = {
+            "departureStation": {
+                "city": departureStationCity,
+                "name": departureStationName
+            },
+            "arrivalStation": {
+                "city": arrivalStationCity,
+                "name": arrivalStationName
+            },
+            "departureTime": departureTime,
+            "arrivalTime": arrivalTime,
+            "trainName": trainName,
+            "totalSeats": totalSeats,
+            "pricePerSeat": pricePerSeat
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/routes/new',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(payload)
+        })
+            .then(response =>  refreshRoutesData(response.id));
+    });
+}
+
+// TODO - add selecting station from dropdown (to avoid adding route with station that doesnt exist)
+// TODO - add validation for different departure and arrival stations
+// TODO - add validation for different departure and arrival time (not the same, departure time before arrival)
+function updateRoute() {
+    $('.btn-save').click(function (event) {
+        event.preventDefault();
+        let routeId = $('#routeId')[0].value;
+        let departureStationCity = $('#departureStationCity')[0].value;
+        let departureStationName = $('#departureStationName')[0].value;
+        let arrivalStationCity = $('#arrivalStationCity')[0].value;
+        let arrivalStationName = $('#arrivalStationName')[0].value;
+        let departureTime = $('#departureTime')[0].value;
+        let arrivalTime = $('#arrivalTime')[0].value;
+        let trainName = $('#trainName')[0].value;
+        let totalSeats = $('#totalSeats')[0].value;
+        let pricePerSeat = $('#pricePerSeat')[0].value;
+
+        let payload = {
+            "departureStation": {
+                "city": departureStationCity,
+                "name": departureStationName
+            },
+            "arrivalStation": {
+                "city": arrivalStationCity,
+                "name": arrivalStationName
+            },
+            "departureTime": departureTime,
+            "arrivalTime": arrivalTime,
+            "trainName": trainName,
+            "totalSeats": totalSeats,
+            "pricePerSeat": pricePerSeat
+        };
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/routes/' + routeId + '/edit',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(payload)
+        })
+            .always(function () {
+                refreshRoutesData(+routeId);
+            });
+    });
 }
 
 function renderRoutes(routes, selectedRouteId) {

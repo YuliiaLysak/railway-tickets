@@ -8,7 +8,9 @@ create table routes
     train_name           varchar(255) not null,
     total_seats          int4         not null,
     price_per_seat       float8       not null,
-    primary key (id)
+    primary key (id),
+    unique (departure_station_id, arrival_station_id,
+            departure_time, arrival_time, train_name)
 );
 
 create table stations

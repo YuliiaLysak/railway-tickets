@@ -35,13 +35,13 @@ public class RouteService {
         return routeRepository.findAll();
     }
 
-    public void addNewRoute(Route route) {
+    public Route addNewRoute(Route route) {
         Station departureStationFromDb = getStationByCityAndName(route.getDepartureStation());
         Station arrivalStationFromDb = getStationByCityAndName(route.getArrivalStation());
 
         route.setDepartureStation(departureStationFromDb);
         route.setArrivalStation(arrivalStationFromDb);
-        routeRepository.save(route);
+        return routeRepository.save(route);
     }
 
     public void deleteRoute(Long routeId) {
