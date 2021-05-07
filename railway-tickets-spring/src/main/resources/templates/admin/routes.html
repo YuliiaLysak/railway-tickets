@@ -53,14 +53,16 @@
                 <form class="row g-3">
                     <input type="hidden" id="routeId">
                     <div class="col-md-6">
-                        <span class="input-group-text">Departure station</span>
-                        <input type="text" class="form-control" placeholder="City" id="departureStationCity">
-                        <input type="text" class="form-control" placeholder="Name" id="departureStationName">
+                        <label for="departureStation" class="form-label">Departure station</label>
+                        <select class="form-select" id="departureStation">
+                            <option selected>Departure station...</option>
+                        </select>
                     </div>
                     <div class="col-md-6">
-                        <span class="input-group-text">Arrival station</span>
-                        <input type="text" class="form-control" placeholder="City" id="arrivalStationCity">
-                        <input type="text" class="form-control" placeholder="Name" id="arrivalStationName">
+                        <label for="arrivalStation" class="form-label">Arrival station</label>
+                        <select class="form-select" id="arrivalStation">
+                            <option selected>Arrival station...</option>
+                        </select>
                     </div>
                     <div class="col-md-6">
                         <label for="departureTime" class="form-label">Departure date and time</label>
@@ -82,6 +84,11 @@
                         <label for="pricePerSeat" class="form-label">Price per seat</label>
                         <input type="number" class="form-control" id="pricePerSeat">
                     </div>
+
+                    <div class="row pb-2 pt-1">
+                        <span class="invisible text-danger">Error: Fuuuuuuuuuu!</span>
+                    </div>
+
                     <div class="col-2">
                         <button type="submit" class="btn btn-primary btn-save">Save</button>
                     </div>

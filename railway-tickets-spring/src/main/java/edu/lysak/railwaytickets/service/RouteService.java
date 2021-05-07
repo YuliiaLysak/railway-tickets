@@ -1,12 +1,15 @@
 package edu.lysak.railwaytickets.service;
 
+import edu.lysak.railwaytickets.dto.RouteDto;
 import edu.lysak.railwaytickets.dto.SearchRouteRequestDto;
 import edu.lysak.railwaytickets.dto.SearchRouteResponseDto;
+import edu.lysak.railwaytickets.exceptions.BusinessLogicException;
 import edu.lysak.railwaytickets.model.Route;
 import edu.lysak.railwaytickets.model.Station;
 import edu.lysak.railwaytickets.repository.RouteRepository;
 import edu.lysak.railwaytickets.repository.StationRepository;
 import edu.lysak.railwaytickets.repository.TicketRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -35,57 +38,29 @@ public class RouteService {
         return routeRepository.findAll();
     }
 
-    public Route addNewRoute(Route route) {
-        Station departureStationFromDb = getStationByCityAndName(route.getDepartureStation());
-        Station arrivalStationFromDb = getStationByCityAndName(route.getArrivalStation());
-
-        route.setDepartureStation(departureStationFromDb);
-        route.setArrivalStation(arrivalStationFromDb);
+    public Route addNewRoute(RouteDto routeDto) {
+        Route route = new Route();
+        transferInputData(routeDto, route);
         return routeRepository.save(route);
     }
 
     public void deleteRoute(Long routeId) {
-        routeRepository.deleteById(routeId);
+        try {
+            routeRepository.deleteById(routeId);
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessLogicException(
+                    "Route with purchased tickets cannot be deleted"
+            );
+        }
     }
 
     @Transactional
-    public void updateRoute(Long routeId, Route route) {
+    public void updateRoute(Long routeId, RouteDto routeDto) {
         Route updatedRoute = routeRepository.findById(routeId)
                 .orElseThrow(() -> new IllegalStateException(String.format(
                         "Route with id = %d doesn't exist", routeId)));
 
-        Station departureStationFromDb = getStationByCityAndName(route.getDepartureStation());
-        Station arrivalStationFromDb = getStationByCityAndName(route.getArrivalStation());
-
-        if (departureStationFromDb != null) {
-            updatedRoute.setDepartureStation(departureStationFromDb);
-        }
-
-        if (arrivalStationFromDb != null) {
-            updatedRoute.setArrivalStation(arrivalStationFromDb);
-        }
-
-        LocalDateTime departureTime = route.getDepartureTime();
-        LocalDateTime arrivalTime = route.getArrivalTime();
-        if (departureTime != null && arrivalTime != null && arrivalTime.isAfter(departureTime)) {
-            updatedRoute.setDepartureTime(departureTime);
-            updatedRoute.setArrivalTime(arrivalTime);
-        }
-
-        String trainName = route.getTrainName();
-        if (trainName != null && !trainName.isEmpty()) {
-            updatedRoute.setTrainName(trainName);
-        }
-
-        Integer totalSeats = route.getTotalSeats();
-        if (totalSeats != null && totalSeats > 0) {
-            updatedRoute.setTotalSeats(totalSeats);
-        }
-
-        Double pricePerSeat = route.getPricePerSeat();
-        if (pricePerSeat != null && pricePerSeat > 0) {
-            updatedRoute.setPricePerSeat(pricePerSeat);
-        }
+        transferInputData(routeDto, updatedRoute);
 
         routeRepository.save(updatedRoute);
     }
@@ -107,6 +82,37 @@ public class RouteService {
                 .filter(route -> getAvailableSeats(route) > 0)
                 .map(this::createSearchResponse)
                 .collect(Collectors.toList());
+    }
+
+    //TODO - validate Optional and other route fields
+    private void transferInputData(RouteDto routeDto, Route route) {
+        Station departureStation = stationRepository.findById(routeDto.getDepartureStationId()).get();
+        Station arrivalStation = stationRepository.findById(routeDto.getArrivalStationId()).get();
+
+        route.setDepartureStation(departureStation);
+        route.setArrivalStation(arrivalStation);
+
+        LocalDateTime departureTime = routeDto.getDepartureTime();
+        LocalDateTime arrivalTime = routeDto.getArrivalTime();
+        if (departureTime != null && arrivalTime != null && arrivalTime.isAfter(departureTime)) {
+            route.setDepartureTime(departureTime);
+            route.setArrivalTime(arrivalTime);
+        }
+
+        String trainName = routeDto.getTrainName();
+        if (trainName != null && !trainName.isEmpty()) {
+            route.setTrainName(trainName);
+        }
+
+        Integer totalSeats = routeDto.getTotalSeats();
+        if (totalSeats != null && totalSeats > 0) {
+            route.setTotalSeats(totalSeats);
+        }
+
+        Double pricePerSeat = routeDto.getPricePerSeat();
+        if (pricePerSeat != null && pricePerSeat > 0) {
+            route.setPricePerSeat(pricePerSeat);
+        }
     }
 
     private SearchRouteResponseDto createSearchResponse(Route route) {

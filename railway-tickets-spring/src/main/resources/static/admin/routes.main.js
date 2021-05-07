@@ -1,10 +1,32 @@
 $(document).ready(function () {
+    loadDepartureStations();
+
     refreshRoutesData();
 
     updateRoute();
     deleteRoute();
     addRoute();
+
+    // addListenerToHideErrorMessage();
 });
+
+function loadDepartureStations() {
+    $.ajax({
+        type: 'GET',
+        url: '/api/stations',
+        contentType: 'application/json'
+    })
+        .then(stations => stations.forEach(
+            station => buildSelectStation(station)
+        ));
+}
+
+function buildSelectStation(station) {
+    let option = `<option value="${station.id}">
+                        ${station.city} (${station.name})</option>`;
+    $('#departureStation').append(option);
+    $('#arrivalStation').append(option);
+}
 
 function refreshRoutesData(selectedRouteId) {
     $.ajax({
@@ -20,10 +42,8 @@ function refreshRoutesData(selectedRouteId) {
             $('.btn-route').click(function (event) {
                 let $selectedItem = $(event.currentTarget);
                 $('#routeId')[0].value = $selectedItem.data('route-id');
-                $('#departureStationCity')[0].value = $selectedItem.data('route-departure-station-city');
-                $('#departureStationName')[0].value = $selectedItem.data('route-departure-station-name');
-                $('#arrivalStationCity')[0].value = $selectedItem.data('route-arrival-station-city');
-                $('#arrivalStationName')[0].value = $selectedItem.data('route-arrival-station-name');
+                $('#departureStation')[0].value = $selectedItem.data('route-departure-station-id');
+                $('#arrivalStation')[0].value = $selectedItem.data('route-arrival-station-id');
                 $('#departureTime')[0].value = $selectedItem.data('route-departure-time');
                 $('#arrivalTime')[0].value = $selectedItem.data('route-arrival-time');
                 $('#trainName')[0].value = $selectedItem.data('route-train-name');
@@ -38,12 +58,19 @@ function deleteRoute() {
     $('.btn-delete').click(function (event) {
         event.preventDefault();
         let routeId = $('#routeId')[0].value;
+        if (!routeId) {
+            return;
+        }
         $.ajax({
             type: 'DELETE',
             url: '/api/routes/' + routeId,
             contentType: 'application/json'
         })
             .always(() => refreshRoutesData(+routeId));
+        // .fail(function (xhr, status, error) {
+        //     $('.text-danger').removeClass('invisible');
+        //     $('.text-danger')[0].innerText = xhr.responseText;
+        // });
     });
 }
 
@@ -52,10 +79,8 @@ function deleteRoute() {
 function addRoute() {
     $('.btn-add').click(function (event) {
         event.preventDefault();
-        let departureStationCity = $('#departureStationCity')[0].value;
-        let departureStationName = $('#departureStationName')[0].value;
-        let arrivalStationCity = $('#arrivalStationCity')[0].value;
-        let arrivalStationName = $('#arrivalStationName')[0].value;
+        let departureStationId = $('#departureStation')[0].value;
+        let arrivalStationId = $('#arrivalStation')[0].value;
         let departureTime = $('#departureTime')[0].value;
         let arrivalTime = $('#arrivalTime')[0].value;
         let trainName = $('#trainName')[0].value;
@@ -63,14 +88,8 @@ function addRoute() {
         let pricePerSeat = $('#pricePerSeat')[0].value;
 
         let payload = {
-            "departureStation": {
-                "city": departureStationCity,
-                "name": departureStationName
-            },
-            "arrivalStation": {
-                "city": arrivalStationCity,
-                "name": arrivalStationName
-            },
+            "departureStationId": departureStationId,
+            "arrivalStationId": arrivalStationId,
             "departureTime": departureTime,
             "arrivalTime": arrivalTime,
             "trainName": trainName,
@@ -85,7 +104,7 @@ function addRoute() {
             dataType: 'json',
             data: JSON.stringify(payload)
         })
-            .then(response =>  refreshRoutesData(response.id));
+            .then(response => refreshRoutesData(response.id));
     });
 }
 
@@ -96,10 +115,8 @@ function updateRoute() {
     $('.btn-save').click(function (event) {
         event.preventDefault();
         let routeId = $('#routeId')[0].value;
-        let departureStationCity = $('#departureStationCity')[0].value;
-        let departureStationName = $('#departureStationName')[0].value;
-        let arrivalStationCity = $('#arrivalStationCity')[0].value;
-        let arrivalStationName = $('#arrivalStationName')[0].value;
+        let departureStationId = $('#departureStation')[0].value;
+        let arrivalStationId = $('#arrivalStation')[0].value;
         let departureTime = $('#departureTime')[0].value;
         let arrivalTime = $('#arrivalTime')[0].value;
         let trainName = $('#trainName')[0].value;
@@ -107,20 +124,18 @@ function updateRoute() {
         let pricePerSeat = $('#pricePerSeat')[0].value;
 
         let payload = {
-            "departureStation": {
-                "city": departureStationCity,
-                "name": departureStationName
-            },
-            "arrivalStation": {
-                "city": arrivalStationCity,
-                "name": arrivalStationName
-            },
+            "departureStationId": departureStationId,
+            "arrivalStationId": arrivalStationId,
             "departureTime": departureTime,
             "arrivalTime": arrivalTime,
             "trainName": trainName,
             "totalSeats": totalSeats,
             "pricePerSeat": pricePerSeat
         };
+
+        if (!routeId) {
+            return;
+        }
 
         $.ajax({
             type: 'PUT',
@@ -134,6 +149,62 @@ function updateRoute() {
             });
     });
 }
+
+/*
+function addListenerToHideErrorMessage() {
+    $("#departureStationCity").on('input', function () {
+        $('.text-danger').addClass('invisible');
+    });
+
+    $("#departureStationName").on('input', function () {
+        $('.text-danger').addClass('invisible');
+    });
+
+    $("#arrivalStationCity").on('input', function () {
+        $('.text-danger').addClass('invisible');
+    });
+
+    $("#arrivalStationName").on('input', function () {
+        $('.text-danger').addClass('invisible');
+    });
+
+    $("#departureTime").on('input', function () {
+        $('.text-danger').addClass('invisible');
+    });
+
+    $("#arrivalTime").on('input', function () {
+        $('.text-danger').addClass('invisible');
+    });
+
+    $("#trainName").on('input', function () {
+        $('.text-danger').addClass('invisible');
+    });
+
+    $("#totalSeats").on('input', function () {
+        $('.text-danger').addClass('invisible');
+    });
+
+    $("#pricePerSeat").on('input', function () {
+        $('.text-danger').addClass('invisible');
+    });
+
+
+
+
+
+
+
+
+    // $("#stationCity").on('change', function () {
+    //     $('.text-danger').addClass('invisible');
+    // });
+    //
+    // $("#stationName").on('change', function () {
+    //     $('.text-danger').addClass('invisible');
+    // });
+}
+
+ */
 
 function renderRoutes(routes, selectedRouteId) {
     if (routes.length === 0) {
@@ -160,10 +231,8 @@ function renderRouteLine(route, selectedRouteId, index) {
                                 data-bs-toggle="collapse" data-bs-target="#${collapseId}"
                                 aria-expanded="true" aria-controls="${collapseId}"
                                 data-route-id="${route.id}"
-                                data-route-departure-station-city="${route.departureStation.city}"
-                                data-route-departure-station-name="${route.departureStation.name}"
-                                data-route-arrival-station-city="${route.arrivalStation.city}"
-                                data-route-arrival-station-name="${route.arrivalStation.name}"
+                                data-route-departure-station-id="${route.departureStation.id}"
+                                data-route-arrival-station-id="${route.arrivalStation.id}"
                                 data-route-departure-time="${route.departureTime}"
                                 data-route-arrival-time="${route.arrivalTime}"
                                 data-route-train-name="${route.trainName}"

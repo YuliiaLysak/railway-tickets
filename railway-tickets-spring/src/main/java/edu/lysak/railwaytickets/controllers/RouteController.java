@@ -1,5 +1,6 @@
 package edu.lysak.railwaytickets.controllers;
 
+import edu.lysak.railwaytickets.dto.RouteDto;
 import edu.lysak.railwaytickets.dto.SearchRouteRequestDto;
 import edu.lysak.railwaytickets.dto.SearchRouteResponseDto;
 import edu.lysak.railwaytickets.model.Route;
@@ -23,8 +24,8 @@ public class RouteController {
     }
 
     @PostMapping("/new")
-    public Route addNewRoute(@RequestBody Route route) {
-        return routeService.addNewRoute(route);
+    public Route addNewRoute(@RequestBody RouteDto routeDto) {
+        return routeService.addNewRoute(routeDto);
     }
 
     @DeleteMapping("/{routeId}")
@@ -33,8 +34,8 @@ public class RouteController {
     }
 
     @PutMapping("/{routeId}/edit")
-    public void updateRoute(@PathVariable Long routeId, @RequestBody Route route) {
-        routeService.updateRoute(routeId, route);
+    public void updateRoute(@PathVariable Long routeId, @RequestBody RouteDto routeDto) {
+        routeService.updateRoute(routeId, routeDto);
     }
 
     @PostMapping("/search")
