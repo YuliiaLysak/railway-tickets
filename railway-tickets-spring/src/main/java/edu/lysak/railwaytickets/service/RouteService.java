@@ -4,6 +4,7 @@ import edu.lysak.railwaytickets.dto.RouteDto;
 import edu.lysak.railwaytickets.dto.SearchRouteRequestDto;
 import edu.lysak.railwaytickets.dto.SearchRouteResponseDto;
 import edu.lysak.railwaytickets.exceptions.BusinessLogicException;
+import edu.lysak.railwaytickets.exceptions.InputValidationException;
 import edu.lysak.railwaytickets.model.Route;
 import edu.lysak.railwaytickets.model.Station;
 import edu.lysak.railwaytickets.repository.RouteRepository;
@@ -11,11 +12,14 @@ import edu.lysak.railwaytickets.repository.StationRepository;
 import edu.lysak.railwaytickets.repository.TicketRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,7 +44,7 @@ public class RouteService {
 
     public Route addNewRoute(RouteDto routeDto) {
         Route route = new Route();
-        transferInputData(routeDto, route);
+        validateAndTransferInputData(routeDto, route);
         return routeRepository.save(route);
     }
 
@@ -57,10 +61,10 @@ public class RouteService {
     @Transactional
     public void updateRoute(Long routeId, RouteDto routeDto) {
         Route updatedRoute = routeRepository.findById(routeId)
-                .orElseThrow(() -> new IllegalStateException(String.format(
+                .orElseThrow(() -> new InputValidationException(String.format(
                         "Route with id = %d doesn't exist", routeId)));
 
-        transferInputData(routeDto, updatedRoute);
+        validateAndTransferInputData(routeDto, updatedRoute);
 
         routeRepository.save(updatedRoute);
     }
@@ -84,42 +88,58 @@ public class RouteService {
                 .collect(Collectors.toList());
     }
 
-    //TODO - validate Optional and other route fields
-    private void transferInputData(RouteDto routeDto, Route route) {
-        Station departureStation = stationRepository.findById(routeDto.getDepartureStationId()).get();
-        Station arrivalStation = stationRepository.findById(routeDto.getArrivalStationId()).get();
+    private void validateAndTransferInputData(RouteDto routeDto, Route route) {
+        if (ObjectUtils.isEmpty(routeDto.getDepartureStationId())
+                || ObjectUtils.isEmpty(routeDto.getArrivalStationId())) {
+            throw new InputValidationException("Departure and/or arrival station should not be empty");
+        }
 
-        route.setDepartureStation(departureStation);
-        route.setArrivalStation(arrivalStation);
+        Station departureStation = stationRepository.findById(routeDto.getDepartureStationId())
+                .orElseThrow(() -> new BusinessLogicException("Departure station not found"));
+        Station arrivalStation = stationRepository.findById(routeDto.getArrivalStationId())
+                .orElseThrow(() -> new BusinessLogicException("Arrival station not found"));
+        if (Objects.equals(departureStation, arrivalStation)) {
+            throw new BusinessLogicException("Departure and arrival stations should not be the same");
+        }
 
         LocalDateTime departureTime = routeDto.getDepartureTime();
         LocalDateTime arrivalTime = routeDto.getArrivalTime();
-        if (departureTime != null && arrivalTime != null && arrivalTime.isAfter(departureTime)) {
-            route.setDepartureTime(departureTime);
-            route.setArrivalTime(arrivalTime);
+        if (departureTime == null || arrivalTime == null) {
+            throw new InputValidationException("Departure and/or arrival date and time should not be empty");
+        }
+
+        if (arrivalTime.isBefore(departureTime) || arrivalTime.isEqual(departureTime)) {
+            throw new InputValidationException("Departure date and time should be before arrival");
         }
 
         String trainName = routeDto.getTrainName();
-        if (trainName != null && !trainName.isEmpty()) {
-            route.setTrainName(trainName);
+        if (ObjectUtils.isEmpty(trainName)) {
+            throw new InputValidationException("Train name should not be empty");
         }
 
         Integer totalSeats = routeDto.getTotalSeats();
-        if (totalSeats != null && totalSeats > 0) {
-            route.setTotalSeats(totalSeats);
+        if (totalSeats == null || totalSeats <= 0) {
+            throw new InputValidationException("Total seats should be more than 0");
         }
 
         Double pricePerSeat = routeDto.getPricePerSeat();
-        if (pricePerSeat != null && pricePerSeat > 0) {
-            route.setPricePerSeat(pricePerSeat);
+        if (pricePerSeat == null || pricePerSeat <= 0) {
+            throw new InputValidationException("Price per seat should be more than 0");
         }
+
+        route.setDepartureStation(departureStation);
+        route.setArrivalStation(arrivalStation);
+        route.setDepartureTime(departureTime);
+        route.setArrivalTime(arrivalTime);
+        route.setTrainName(trainName);
+        route.setTotalSeats(totalSeats);
+        route.setPricePerSeat(pricePerSeat);
     }
 
     private SearchRouteResponseDto createSearchResponse(Route route) {
         SearchRouteResponseDto responseDto = new SearchRouteResponseDto();
 
         responseDto.setRouteId(route.getId());
-
         responseDto.setTrainName(route.getTrainName());
 
         String departureStationName = String.format("%s (%s)",
@@ -134,20 +154,13 @@ public class RouteService {
 
         String arrivalStationName = String.format("%s (%s)",
                 route.getArrivalStation().getCity(), route.getArrivalStation().getName());
+
         responseDto.setArrivalStationName(arrivalStationName);
-
         responseDto.setArrivalDateTime(route.getArrivalTime());
-
         responseDto.setTotalSeats(route.getTotalSeats());
-
         responseDto.setAvailableSeats(getAvailableSeats(route));
-
         responseDto.setPricePerSeat(route.getPricePerSeat());
         return responseDto;
-    }
-
-    private Station getStationByCityAndName(Station station) {
-        return stationRepository.findByCityAndName(station.getCity(), station.getName());
     }
 
     public int getAvailableSeats(Route route) {
@@ -160,6 +173,6 @@ public class RouteService {
     public Route findRouteById(Long routeId) {
         return routeRepository.findById(routeId)
                 .orElseThrow(() -> new IllegalStateException(String.format(
-                "Route with id = %d doesn't exist", routeId)));
+                        "Route with id = %d doesn't exist", routeId)));
     }
 }

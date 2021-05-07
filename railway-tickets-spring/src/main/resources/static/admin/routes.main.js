@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    loadDepartureStations();
+    loadStations();
 
     refreshRoutesData();
 
@@ -7,10 +7,10 @@ $(document).ready(function () {
     deleteRoute();
     addRoute();
 
-    // addListenerToHideErrorMessage();
+    addListenerToHideErrorMessage();
 });
 
-function loadDepartureStations() {
+function loadStations() {
     $.ajax({
         type: 'GET',
         url: '/api/stations',
@@ -40,6 +40,15 @@ function refreshRoutesData(selectedRouteId) {
         // method for handling selection of route
         .then(() => {
             $('.btn-route').click(function (event) {
+
+                $('#departureStation').change();
+                $('#arrivalStation').change();
+                $('#departureTime').change();
+                $('#arrivalTime').change();
+                $('#trainName').change();
+                $('#totalSeats').change();
+                $('#pricePerSeat').change();
+
                 let $selectedItem = $(event.currentTarget);
                 $('#routeId')[0].value = $selectedItem.data('route-id');
                 $('#departureStation')[0].value = $selectedItem.data('route-departure-station-id');
@@ -53,7 +62,6 @@ function refreshRoutesData(selectedRouteId) {
         });
 }
 
-// TODO - add alert (exception handling Spring boot) that route from the purchased ticket cannot be deleted
 function deleteRoute() {
     $('.btn-delete').click(function (event) {
         event.preventDefault();
@@ -66,16 +74,14 @@ function deleteRoute() {
             url: '/api/routes/' + routeId,
             contentType: 'application/json'
         })
-            .always(() => refreshRoutesData(+routeId));
-        // .fail(function (xhr, status, error) {
-        //     $('.text-danger').removeClass('invisible');
-        //     $('.text-danger')[0].innerText = xhr.responseText;
-        // });
+            .always(() => refreshRoutesData(+routeId))
+        .fail(function (xhr, status, error) {
+            $('.text-danger').removeClass('invisible');
+            $('.text-danger')[0].innerText = xhr.responseText;
+        });
     });
 }
 
-// TODO - add selecting station from dropdown (to avoid adding route with station that doesnt exist)
-// TODO - add alert that all input should be filled
 function addRoute() {
     $('.btn-add').click(function (event) {
         event.preventDefault();
@@ -104,13 +110,14 @@ function addRoute() {
             dataType: 'json',
             data: JSON.stringify(payload)
         })
-            .then(response => refreshRoutesData(response.id));
+            .then(response => refreshRoutesData(response.id))
+            .fail(function (xhr, status, error) {
+                $('.text-danger').removeClass('invisible');
+                $('.text-danger')[0].innerText = xhr.responseText;
+            });
     });
 }
 
-// TODO - add selecting station from dropdown (to avoid adding route with station that doesnt exist)
-// TODO - add validation for different departure and arrival stations
-// TODO - add validation for different departure and arrival time (not the same, departure time before arrival)
 function updateRoute() {
     $('.btn-save').click(function (event) {
         event.preventDefault();
@@ -146,25 +153,20 @@ function updateRoute() {
         })
             .always(function () {
                 refreshRoutesData(+routeId);
+            })
+            .fail(function (xhr, status, error) {
+                $('.text-danger').removeClass('invisible');
+                $('.text-danger')[0].innerText = xhr.responseText;
             });
     });
 }
 
-/*
 function addListenerToHideErrorMessage() {
-    $("#departureStationCity").on('input', function () {
+    $("#departureStation").on('input', function () {
         $('.text-danger').addClass('invisible');
     });
 
-    $("#departureStationName").on('input', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#arrivalStationCity").on('input', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#arrivalStationName").on('input', function () {
+    $("#arrivalStation").on('input', function () {
         $('.text-danger').addClass('invisible');
     });
 
@@ -189,22 +191,34 @@ function addListenerToHideErrorMessage() {
     });
 
 
+    $("#departureStation").on('change', function () {
+        $('.text-danger').addClass('invisible');
+    });
 
+    $("#arrivalStation").on('change', function () {
+        $('.text-danger').addClass('invisible');
+    });
 
+    $("#departureTime").on('change', function () {
+        $('.text-danger').addClass('invisible');
+    });
 
+    $("#arrivalTime").on('change', function () {
+        $('.text-danger').addClass('invisible');
+    });
 
+    $("#trainName").on('change', function () {
+        $('.text-danger').addClass('invisible');
+    });
 
+    $("#totalSeats").on('change', function () {
+        $('.text-danger').addClass('invisible');
+    });
 
-    // $("#stationCity").on('change', function () {
-    //     $('.text-danger').addClass('invisible');
-    // });
-    //
-    // $("#stationName").on('change', function () {
-    //     $('.text-danger').addClass('invisible');
-    // });
+    $("#pricePerSeat").on('change', function () {
+        $('.text-danger').addClass('invisible');
+    });
 }
-
- */
 
 function renderRoutes(routes, selectedRouteId) {
     if (routes.length === 0) {
