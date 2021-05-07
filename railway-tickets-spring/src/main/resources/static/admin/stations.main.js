@@ -4,6 +4,8 @@ $(document).ready(function () {
     updateStation();
     deleteStation();
     addStation();
+
+    addListenerToHideErrorMessage();
 });
 
 function refreshStationData(selectedStationId) {
@@ -19,6 +21,8 @@ function refreshStationData(selectedStationId) {
         .then(() => {
             $('.list-group-item-action').click(function (event) {
                 event.preventDefault();
+                $('#stationCity').change();
+                $('#stationName').change();
                 $('.list-group-item-action').each(function () {
                     $(this).removeClass('active');
                 });
@@ -41,6 +45,9 @@ function updateStation() {
             "city": stationCity,
             "name": stationName
         };
+        if (!stationId) {
+            return;
+        }
         $.ajax({
             type: 'PUT',
             url: '/api/stations/' + stationId + '/edit',
@@ -50,25 +57,52 @@ function updateStation() {
         })
             .always(function () {
                 refreshStationData(+stationId);
+            })
+            .fail(function (xhr, status, error) {
+                $('.text-danger').removeClass('invisible');
+                $('.text-danger')[0].innerText = xhr.responseText;
             });
     });
 }
 
-// TODO - add alert (exception handling Spring boot) that station from the active route cannot be deleted
 function deleteStation() {
     $('.btn-delete').click(function (event) {
         event.preventDefault();
         let stationId = $('#stationId')[0].value;
+        if (!stationId) {
+            return;
+        }
         $.ajax({
             type: 'DELETE',
             url: '/api/stations/' + stationId,
             contentType: 'application/json'
         })
-            .always(() => refreshStationData(+stationId));
+            .always(() => refreshStationData(+stationId))
+            .fail(function (xhr, status, error) {
+                $('.text-danger').removeClass('invisible');
+                $('.text-danger')[0].innerText = xhr.responseText;
+            });
     });
 }
 
-// TODO - add alert (exception handling Spring boot) that station with the same name and city already exists
+function addListenerToHideErrorMessage() {
+    $("#stationCity").on('input', function () {
+        $('.text-danger').addClass('invisible');
+    });
+
+    $("#stationName").on('input', function () {
+        $('.text-danger').addClass('invisible');
+    });
+
+    $("#stationCity").on('change', function () {
+        $('.text-danger').addClass('invisible');
+    });
+
+    $("#stationName").on('change', function () {
+        $('.text-danger').addClass('invisible');
+    });
+}
+
 function addStation() {
     $('.btn-add').click(function (event) {
         event.preventDefault();
@@ -85,7 +119,11 @@ function addStation() {
             dataType: 'json',
             data: JSON.stringify(payload)
         })
-            .then(response =>  refreshStationData(response.id));
+            .then(response => refreshStationData(response.id))
+            .fail(function (xhr, status, error) {
+                $('.text-danger').removeClass('invisible');
+                $('.text-danger')[0].innerText = xhr.responseText;
+            });
     });
 }
 
