@@ -15,7 +15,7 @@
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <title>Home page</title>
+    <title th:text="#{main}">Main page</title>
 
     <link rel="stylesheet" href="/style.css">
 
@@ -26,18 +26,19 @@
     <div class="container-fluid">
         <!--        TODO - ADD IMG  -->
         <!--        <img src="/img/railway.png" alt="railway">-->
-        <a class="navbar-brand" href="/home">Railway tickets</a>
+        <a class="navbar-brand" href="/home" th:text="#{railwayTickets}">Railway tickets</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/api/stations">Stations</a>
+
+                <li sec:authorize="hasAuthority('ADMIN')" class="nav-item">
+                    <a class="nav-link" href="/admin/stations" th:text="#{stations}">Stations</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/api/routes">Routes</a>
+                <li sec:authorize="hasAuthority('ADMIN')" class="nav-item">
+                    <a class="nav-link" href="/admin/routes" th:text="#{routes}">Routes</a>
                 </li>
             </ul>
 
@@ -48,7 +49,7 @@
 
             <div sec:authorize="isAnonymous()">
                 <a href="/login" class="me-3">
-                    <button class="btn btn-outline-success" type="submit">
+                    <button class="btn btn-outline-success" type="submit" th:text="#{signin}">
                         Sign in
                     </button>
                 </a>
@@ -56,7 +57,7 @@
 
             <div sec:authorize="isAnonymous()">
                 <a href="/registration" class="me-3">
-                    <button class="btn btn-success" type="submit">
+                    <button class="btn btn-success" type="submit" th:text="#{signup}">
                         Sign up
                     </button>
                 </a>
@@ -64,7 +65,7 @@
 
             <div sec:authorize="isAuthenticated()">
                 <form th:action="@{/logout}" method="post">
-                    <button class="btn btn-success" type="submit">
+                    <button class="btn btn-success" type="submit" th:text="#{signout}">
                         Sign out
                     </button>
                 </form>
@@ -72,24 +73,20 @@
         </div>
     </div>
 
-
+<!--TODO - add image for the language-->
     <!--Start of the button block for changing languages-->
     <div class="btn-group">
-        <button type="button" class="btn btn-danger dropdown-toggle"
+        <button th:text="#{language}" type="button" class="btn btn-danger dropdown-toggle"
                 data-bs-toggle="dropdown" aria-expanded="false">
             Language
         </button>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">
-<!--                <img src="/img/english.png" width="30">-->
+            <li><a th:text="#{en}" class="dropdown-item" href="?lang=en">
+<!--                <img src="static/img/english.png" width="30">-->
                 English</a>
             </li>
-            <li><a class="dropdown-item" href="#">
-<!--                <img src="/img/polish.png" width="30">-->
-                Polish</a>
-            </li>
-            <li><a class="dropdown-item" href="#">
-<!--                <img src="/img/ukrainian.png" width="30">-->
+            <li><a th:text="#{ua}" class="dropdown-item" href="?lang=ua">
+<!--                <img src="static/img/ukrainian.png" width="30">-->
                 Ukrainian</a>
             </li>
         </ul>
@@ -101,17 +98,17 @@
 <!--Start of the search widget -->
 <div class="signup-form">
     <form action="#" method="post" class="search-form">
-        <h2>Search</h2>
+        <h2 th:text="#{search}">Search</h2>
         <br>
         <div class="form-group">
             <div class="input-group">
-                <input type="text" class="form-control" name="departureCity" placeholder="Departure city"
+                <input type="text" class="form-control" name="departureCity" th:placeholder="#{departureCity}"
                        required="required">
             </div>
         </div>
         <div class="form-group">
             <div class="input-group">
-                <input type="text" class="form-control" name="arrivalCity" placeholder="Arrival city"
+                <input type="text" class="form-control" name="arrivalCity" th:placeholder="#{arrivalCity}"
                        required="required">
             </div>
         </div>
@@ -123,7 +120,7 @@
         </div>
         <!--        TODO  - center the button -->
         <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block btn-lg">Search</button>
+            <button type="submit" class="btn btn-primary btn-block btn-lg" th:text="#{search}">Search</button>
         </div>
     </form>
 </div>

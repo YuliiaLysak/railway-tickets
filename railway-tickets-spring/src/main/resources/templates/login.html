@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
-    <title>Sign In</title>
+    <title th:text="#{signin}">Sign In</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -15,32 +15,38 @@
 </head>
 <body>
 <div class="signup-form">
-    <div style="color: red" th:if="${param.error}">
+    <div style="color: red" th:if="${param.error}" th:text="#{invalidSignin}">
         Invalid email and password
     </div>
-    <div th:if="${param.logout}">
-        You have been logged out
+    <div th:if="${param.logout}" th:text="#{signedOut}">
+        You have been signed out
     </div>
     <form th:action="@{/login}" method="post">
-        <h2>Sign In</h2>
+        <h2 th:text="#{signin}">Sign In</h2>
         <div class="form-group">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                <input type="email" class="form-control" name="email" placeholder="Email Address" required="required">
+                <input type="email" class="form-control" name="email" th:placeholder="#{email}" required="required">
             </div>
         </div>
         <div class="form-group">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                <input type="password" class="form-control" name="password" placeholder="Password" required="required">
+                <input type="password" class="form-control" name="password" th:placeholder="#{password}" required="required">
             </div>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block btn-lg">Sign In</button>
+            <button type="submit" class="btn btn-primary btn-block btn-lg" th:text="#{signin}">Sign In</button>
         </div>
     </form>
-    <div class="text-center">Don't have an account? <a href="/registration">Sign up here</a></div>
-    <div class="text-center">Go back to <a href="/">main page</a></div>
+    <div class="text-center">
+        <span th:text="#{withoutAccount}">Don't have an account?</span>
+        <a href="/registration" th:text="#{signup}">Sign up</a>
+    </div>
+    <div class="text-center">
+        <span th:text="#{back}">Go back to</span>
+        <a href="/" th:text="#{toMainPage}">main page</a>
+    </div>
 </div>
 </body>
 </html>

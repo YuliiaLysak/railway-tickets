@@ -14,7 +14,7 @@
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <title>Edit stations</title>
+    <title th:text="#{stations}">Stations</title>
 </head>
 <body>
 
@@ -25,13 +25,38 @@
             <svg class="bi me-2" width="40" height="32">
                 <use xlink:href="#bootstrap"></use>
             </svg>
-            <span class="fs-4">Railway stations</span>
+            <span class="fs-4" th:text="#{railwayStations}">Railway stations</span>
         </a>
 
         <ul class="nav nav-pills">
-            <li class="nav-item"><a href="/" class="nav-link active">Main page</a></li>
-            <li class="nav-item"><a href="/admin/stations" class="nav-link">Stations</a></li>
-            <li class="nav-item"><a href="/admin/routes" class="nav-link">Routes</a></li>
+            <li class="nav-item">
+                <a href="/" class="nav-link active" th:text="#{main}">Main page</a>
+            </li>
+            <li class="nav-item">
+                <a href="/admin/stations" class="nav-link" th:text="#{stations}">Stations</a>
+            </li>
+            <li class="nav-item">
+                <a href="/admin/routes" class="nav-link" th:text="#{routes}">Routes</a>
+            </li>
+            <!--TODO - add image for the language-->
+            <!--Start of the button block for changing languages-->
+            <li class="btn-group">
+                <button th:text="#{language}" type="button" class="btn btn-primary dropdown-toggle"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    Language
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a th:text="#{en}" class="dropdown-item" href="?lang=en">
+                        <!--                <img src="static/img/english.png" width="30">-->
+                        English</a>
+                    </li>
+                    <li><a th:text="#{ua}" class="dropdown-item" href="?lang=ua">
+                        <!--                <img src="static/img/ukrainian.png" width="30">-->
+                        Ukrainian</a>
+                    </li>
+                </ul>
+            </li>
+            <!--End of the button block for changing languages-->
         </ul>
     </header>
 </div>
@@ -49,7 +74,7 @@
 
         <div class="col">
             <div class="p-4 border bg-light">
-                <div class="row ms-1">
+                <div class="row ms-1" th:text="#{addStationData}">
                     Add / update information about station:
                 </div>
                 <br>
@@ -60,13 +85,13 @@
                         <div class="col-5">
                             <label class="visually-hidden" for="stationCity">City</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="stationCity" placeholder="City">
+                                <input type="text" class="form-control" id="stationCity" th:placeholder="#{city}">
                             </div>
                         </div>
                         <div class="col-5">
                             <label class="visually-hidden" for="stationName">Name</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="stationName" placeholder="Name">
+                                <input type="text" class="form-control" id="stationName" th:placeholder="#{name}">
                             </div>
                         </div>
                     </div>
@@ -77,14 +102,14 @@
 
 
                     <div class="row">
-                        <div class="col-3">
-                            <button type="submit" class="btn btn-primary btn-save">Save</button>
+                        <div class="col-md-auto">
+                            <button type="submit" class="btn btn-primary btn-save" th:text="#{save}">Save</button>
                         </div>
-                        <div class="col-3">
-                            <button type="submit" class="btn btn-danger btn-delete">Delete</button>
+                        <div class="col-md-auto">
+                            <button type="submit" class="btn btn-danger btn-delete" th:text="#{delete}">Delete</button>
                         </div>
-                        <div class="col-6">
-                            <button type="submit" class="btn btn-success btn-add">Add new station</button>
+                        <div class="col-md-auto">
+                            <button type="submit" class="btn btn-success btn-add" th:text="#{add}">Add</button>
                         </div>
                     </div>
                 </form>
