@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
 <head>
 
     <!-- Required bootstrap meta tags -->
@@ -98,7 +98,7 @@
 <!--Start of the search widget -->
 <div class="signup-form">
     <form action="#" method="post" class="search-form">
-        <h2 th:text="#{search}">Search</h2>
+        <h3 th:text="#{where}">Where do  you want to go?</h3>
         <br>
         <div class="form-group">
             <div class="input-group">
@@ -119,7 +119,7 @@
             </div>
         </div>
         <!--        TODO  - center the button -->
-        <div class="form-group">
+        <div class="form-group d-grid gap-2">
             <button type="submit" class="btn btn-primary btn-block btn-lg" th:text="#{search}">Search</button>
         </div>
     </form>
@@ -130,17 +130,11 @@
 <div class="search-results"></div>
 
 
-<!-- Optional JavaScript; choose one of the two! -->
-<!-- Option 1: Bootstrap Bundle with Popper -->
+<!-- Bootstrap JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
-        crossorigin="anonymous"></script>
-
-<!-- Option 2: Separate Popper and Bootstrap JS -->
-<!--
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
--->
+        crossorigin="anonymous">
+</script>
 
 <script src="/main.js"></script>
 

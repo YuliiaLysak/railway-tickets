@@ -45,6 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/",
+                        "/home",
                         "/registration",
                         "/api/routes",
                         "/api/routes/search",   //todo - check if it is working

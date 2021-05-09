@@ -17,7 +17,7 @@ body {
      padding: 30px 0;
  }
 
-.signup-form h2 {
+.signup-form h2, h3 {
     color: #636363;
     margin: 0 0 15px;
     text-align: center;
