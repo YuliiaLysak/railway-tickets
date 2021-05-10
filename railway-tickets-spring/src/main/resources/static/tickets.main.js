@@ -11,6 +11,10 @@ $(document).ready(function () {
             contentType: 'application/json',
         })
             //todo - add confirmation page
-            .then(response => alert('You have successfully bought the ticket'));
+            .then(response => alert('You have successfully bought the ticket'))
+            .fail(function (xhr, status, error) {
+                $('.text-danger').removeClass('invisible');
+                $('.text-danger')[0].innerText = xhr.responseText;
+            });
     });
 });

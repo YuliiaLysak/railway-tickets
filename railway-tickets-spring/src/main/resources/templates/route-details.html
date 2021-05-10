@@ -138,6 +138,9 @@
             <div class="form-group d-grid gap-2" sec:authorize="isAuthenticated()">
                 <button type="submit" class="btn btn-primary btn-block btn-lg btn-buy" th:text="#{purchase}">Purchase</button>
             </div>
+            <div class="row pb-2 pt-1">
+                <span class="invisible text-danger text-center">Error: Fuuuuuuuuuu!</span>
+            </div>
             <div class="text-center" sec:authorize="isAnonymous()">
                 <div th:text="#{questionTicket}">Do you want to buy a ticket? Please</div>
                 <a href="/login" th:text="#{signin}">Sign in</a>
