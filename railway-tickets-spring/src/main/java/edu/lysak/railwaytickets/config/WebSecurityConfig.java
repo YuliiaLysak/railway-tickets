@@ -46,12 +46,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/",
                         "/home",
+                        "/routes/*",
                         "/registration",
                         "/api/routes",
                         "/api/routes/search",   //todo - check if it is working
                         "/api/stations",
                         "/style.css",
                         "/main.js",
+                        "/tickets.main.js",
                         "/admin/stations.main.js",
                         "/admin/routes.main.js"
 //                        "/img/ukrainian.png"//todo - check if it is working

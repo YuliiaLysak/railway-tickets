@@ -22,21 +22,7 @@ $(document).ready(function () {
             data : JSON.stringify(payload)
         })
             .then(response => renderSearchResult(response))
-            .then(it => $('.search-results')[0].innerHTML = it)
-
-            // method for handling button to buy a ticket
-            .then(it => {
-                $('.buy-btn').click(function (event) {
-                    event.preventDefault();
-                    let routeId = $(event.target).data('route-id');
-                    $.ajax({
-                        type : 'POST',
-                        url: '/api/tickets?routeId=' + routeId,
-                        contentType: 'application/json',
-                    })
-                        .then(response => alert('You have successfully bought the ticket'));
-                });
-            });
+            .then(it => $('.search-results')[0].innerHTML = it);
     });
 });
 
@@ -56,26 +42,24 @@ function renderSearchResultLine(route) {
                      <div class="row">
                          <div class="col-sm">${route.trainName}</div>
                          <div class="col-sm">
-                             ${route.departureStationName}
-                             ${route.arrivalStationName}
+                             <div class="row">${route.departureStationName}</div>
+                             <div class="row">${route.arrivalStationName}</div>
                          </div>
                          <div class="col-sm">
-                             ${route.departureDateTime}
-                             ${route.arrivalDateTime}
+                            <div class="row">${route.departureDateTime}</div>
+                            <div class="row">${route.arrivalDateTime}</div>
                          </div>
                          <div class="col-sm">${route.duration}</div>
                          <div class="col-sm">
                              Available seats: ${route.availableSeats} / ${route.totalSeats}
                          </div>
                          <div class="col-sm">${route.pricePerSeat}</div>
-                         <div class="col-sm">${renderBuyButton(route)}</div>
+                         <div class="col-sm">
+                            <a href="/routes/${route.routeId}">
+                                <button class="btn btn-success">View details</button>
+                            </a>
+                         </div>
                      </div>
                  </div>
              </li>`;
-}
-
-function renderBuyButton(route) {
-    return `<button type="button" 
-                    class="buy-btn btn btn-info" 
-                    data-route-id="${route.routeId}">Buy</button>`;
 }

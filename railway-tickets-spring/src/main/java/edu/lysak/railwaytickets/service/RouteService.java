@@ -19,7 +19,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -174,5 +173,10 @@ public class RouteService {
         return routeRepository.findById(routeId)
                 .orElseThrow(() -> new IllegalStateException(String.format(
                         "Route with id = %d doesn't exist", routeId)));
+    }
+
+    public SearchRouteResponseDto getRouteResponseDto(Long routeId) {
+        Route route = findRouteById(routeId);
+        return createSearchResponse(route);
     }
 }

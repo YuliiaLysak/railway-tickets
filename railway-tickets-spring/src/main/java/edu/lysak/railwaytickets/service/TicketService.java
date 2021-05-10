@@ -1,6 +1,5 @@
 package edu.lysak.railwaytickets.service;
 
-import edu.lysak.railwaytickets.dto.SearchRouteRequestDto;
 import edu.lysak.railwaytickets.model.Route;
 import edu.lysak.railwaytickets.model.Ticket;
 import edu.lysak.railwaytickets.model.User;
