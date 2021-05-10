@@ -32,7 +32,7 @@ public class StationService {
             stationRepository.deleteById(stationId);
         } catch (DataIntegrityViolationException e) {
             throw new BusinessLogicException(
-                    "Station from the active route cannot be deleted"
+                    "exception.station.delete"
             );
         }
     }
@@ -44,13 +44,13 @@ public class StationService {
 
     private void validateStationData(Station station) {
         if (stationRepository.findByCityAndName(station.getCity(), station.getName()) != null) {
-            throw new BusinessLogicException("Station with the same city and name already exists");
+            throw new BusinessLogicException("exception.station.exist");
         }
         if (ObjectUtils.isEmpty(station.getCity())) {
-            throw new InputValidationException("Station city should not be empty");
+            throw new InputValidationException("exception.stationCity.empty");
         }
         if (ObjectUtils.isEmpty(station.getName())) {
-            throw new InputValidationException("Station name should not be empty");
+            throw new InputValidationException("exception.stationName.empty");
         }
     }
 }

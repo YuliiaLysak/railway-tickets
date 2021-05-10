@@ -22,7 +22,7 @@ public class TicketService {
     public void buyTicket(User user, Long routeId) {
         Route route = routeService.findRouteById(routeId);
         if (routeService.getAvailableSeats(route) <= 0) {
-            throw new BusinessLogicException("There is no available tickets");
+            throw new BusinessLogicException("exception.ticket.available");
         }
         Ticket ticket = new Ticket();
         ticket.setOwner(user);

@@ -52,7 +52,7 @@ public class RouteService {
             routeRepository.deleteById(routeId);
         } catch (DataIntegrityViolationException e) {
             throw new BusinessLogicException(
-                    "Route with purchased tickets cannot be deleted"
+                    "exception.route.delete"
             );
         }
     }
@@ -61,6 +61,7 @@ public class RouteService {
     public void updateRoute(Long routeId, RouteDto routeDto) {
         Route updatedRoute = routeRepository.findById(routeId)
                 .orElseThrow(() -> new InputValidationException(String.format(
+//                        TODO - add this line with id to message
                         "Route with id = %d doesn't exist", routeId)));
 
         validateAndTransferInputData(routeDto, updatedRoute);
@@ -90,40 +91,40 @@ public class RouteService {
     private void validateAndTransferInputData(RouteDto routeDto, Route route) {
         if (ObjectUtils.isEmpty(routeDto.getDepartureStationId())
                 || ObjectUtils.isEmpty(routeDto.getArrivalStationId())) {
-            throw new InputValidationException("Departure and/or arrival station should not be empty");
+            throw new InputValidationException("exception.station.empty");
         }
 
         Station departureStation = stationRepository.findById(routeDto.getDepartureStationId())
-                .orElseThrow(() -> new BusinessLogicException("Departure station not found"));
+                .orElseThrow(() -> new BusinessLogicException("exception.depStation.null"));
         Station arrivalStation = stationRepository.findById(routeDto.getArrivalStationId())
-                .orElseThrow(() -> new BusinessLogicException("Arrival station not found"));
+                .orElseThrow(() -> new BusinessLogicException("exception.arrStation.null"));
         if (Objects.equals(departureStation, arrivalStation)) {
-            throw new BusinessLogicException("Departure and arrival stations should not be the same");
+            throw new BusinessLogicException("exception.station.same");
         }
 
         LocalDateTime departureTime = routeDto.getDepartureTime();
         LocalDateTime arrivalTime = routeDto.getArrivalTime();
         if (departureTime == null || arrivalTime == null) {
-            throw new InputValidationException("Departure and/or arrival date and time should not be empty");
+            throw new InputValidationException("exception.time.empty");
         }
 
         if (arrivalTime.isBefore(departureTime) || arrivalTime.isEqual(departureTime)) {
-            throw new InputValidationException("Departure date and time should be before arrival");
+            throw new InputValidationException("exception.time.before");
         }
 
         String trainName = routeDto.getTrainName();
         if (ObjectUtils.isEmpty(trainName)) {
-            throw new InputValidationException("Train name should not be empty");
+            throw new InputValidationException("exception.train.empty");
         }
 
         Integer totalSeats = routeDto.getTotalSeats();
         if (totalSeats == null || totalSeats <= 0) {
-            throw new InputValidationException("Total seats should be more than 0");
+            throw new InputValidationException("exception.seats.negative");
         }
 
         Double pricePerSeat = routeDto.getPricePerSeat();
         if (pricePerSeat == null || pricePerSeat <= 0) {
-            throw new InputValidationException("Price per seat should be more than 0");
+            throw new InputValidationException("exception.price.negative");
         }
 
         route.setDepartureStation(departureStation);
@@ -172,6 +173,7 @@ public class RouteService {
     public Route findRouteById(Long routeId) {
         return routeRepository.findById(routeId)
                 .orElseThrow(() -> new IllegalStateException(String.format(
+//                        TODO - add this line with id to message
                         "Route with id = %d doesn't exist", routeId)));
     }
 
