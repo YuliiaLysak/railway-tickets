@@ -19,7 +19,7 @@ public class TicketService {
         this.routeService = routeService;
     }
 
-    public Ticket buyTicket(User user, Long routeId) {
+    public void buyTicket(User user, Long routeId) {
         Route route = routeService.findRouteById(routeId);
         if (routeService.getAvailableSeats(route) <= 0) {
             throw new BusinessLogicException("There is no available tickets");
@@ -28,6 +28,6 @@ public class TicketService {
         ticket.setOwner(user);
         ticket.setRouteId(route.getId());
         ticket.setPurchaseDate(LocalDateTime.now());
-        return ticketRepository.save(ticket);
+        ticketRepository.save(ticket);
     }
 }

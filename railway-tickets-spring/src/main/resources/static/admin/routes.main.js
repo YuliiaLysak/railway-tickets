@@ -222,7 +222,7 @@ function addListenerToHideErrorMessage() {
 
 function renderRoutes(routes, selectedRouteId) {
     if (routes.length === 0) {
-        return '<p class="fs-2 text-danger" style="text-align: center;">No available routes</p>';
+        return `<p class="fs-4 text-danger" style="text-align: center;">${i18n('noRoutes')}</p>`;
     }
     return routes.map((route, index) => renderRouteLine(route, selectedRouteId, index))
         .reduce((a, b) => a + b, '');
@@ -265,31 +265,31 @@ function renderRouteLine(route, selectedRouteId, index) {
                             <table class="table">
                                 <tbody>
                                 <tr>
-                                    <td>Departure station</td>
+                                    <td>${i18n('departureStation')}</td>
                                     <th>${route.departureStation.city} (${route.departureStation.name})</th>
                                 </tr>
                                 <tr>
-                                    <td>Arrival station</td>
+                                    <td>${i18n('arrivalStation')}</td>
                                     <th>${route.arrivalStation.city} (${route.arrivalStation.name})</th>
                                 </tr>
                                 <tr>
-                                    <td>Departure time</td>
+                                    <td>${i18n('departureDateTime')}</td>
                                     <th>${route.departureTime}</th>
                                 </tr>
                                 <tr>
-                                    <td>Arrival time</td>
+                                    <td>${i18n('arrivalDateTime')}</td>
                                     <th>${route.arrivalTime}</th>
                                 </tr>
                                 <tr>
-                                    <td>Train name</td>
+                                    <td>${i18n('trainName')}</td>
                                     <th>${route.trainName}</th>
                                 </tr>
                                 <tr>
-                                    <td>Total seats</td>
+                                    <td>${i18n('totalSeats')}</td>
                                     <th>${route.totalSeats}</th>
                                 </tr>
                                 <tr>
-                                    <td>Price per seat</td>
+                                    <td>${i18n('pricePerSeat')}</td>
                                     <th>${route.pricePerSeat}</th>
                                 </tr>
                                 </tbody>

@@ -1,6 +1,5 @@
 package edu.lysak.railwaytickets.controllers;
 
-import edu.lysak.railwaytickets.model.Ticket;
 import edu.lysak.railwaytickets.model.User;
 import edu.lysak.railwaytickets.service.TicketService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,9 +19,9 @@ public class TicketController {
 
 
     @PostMapping
-    public Ticket buyTicket(@AuthenticationPrincipal User user,
-                            @RequestParam Long routeId
+    public void buyTicket(@AuthenticationPrincipal User user,
+                          @RequestParam Long routeId
     ) {
-        return ticketService.buyTicket(user, routeId);
+        ticketService.buyTicket(user, routeId);
     }
 }

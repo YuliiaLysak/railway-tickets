@@ -129,7 +129,7 @@ function addStation() {
 
 function renderStations(stations, selectedStationId) {
     if (stations.length === 0) {
-        return '<p class="fs-2 text-danger" style="text-align: center;">No available stations</p>';
+        return `<p class="fs-4 text-danger" style="text-align: center;">${i18n('noStations')}</p>`;
     }
     return stations.map(station => renderStationLine(station, selectedStationId))
         .reduce((a, b) => a + b, '');

@@ -12,11 +12,32 @@
           crossorigin="anonymous">
 
     <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-i18n-properties@1.2.7/jquery.i18n.properties.min.js"></script>
 
     <title th:text="#{routes}">Routes</title>
 
     <link rel="stylesheet" href="/style.css">
+
+    <!--    Script for i18n in js files-->
+    <script th:inline="javascript">
+        //Get default language
+        var LANG = [[${#locale.language}]];
+        //initialization i18n plug-in unit
+        $.i18n.properties({
+            path: '/i18n/',
+            name: 'messages',
+            language: LANG,
+            mode: 'both',
+            async: false
+        });
+
+        //initialization i18n function
+        function i18n(msgKey) {
+            return $.i18n.map[msgKey];
+        }
+    </script>
+
 </head>
 <body>
 
@@ -69,7 +90,7 @@
     <div class="row gx-5">
         <div class="col">
 
-            <!-- div container which will be filled with routes.main.js -->
+            <!-- div container which will be filled with routes.home.main.js -->
             <div class="accordion p-3 border bg-light routes-list" id="accordionExample"></div>
 
         </div>
@@ -120,7 +141,7 @@
                         <button type="submit" class="btn btn-primary btn-save" th:text="#{save}">Save</button>
                     </div>
                     <div class="col-md-auto">
-                        <button type="submit" class="btn btn-danger btn-delete" th:text="#{delete}">Delete</button>
+                        <button type="submit" class="btn btn-danger btn-delete" th:text="#{remove}">Delete</button>
                     </div>
                     <div class="col-md-auto">
                         <button type="submit" class="btn btn-success btn-add" th:text="#{add}">Add</button>

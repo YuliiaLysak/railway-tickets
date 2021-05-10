@@ -28,7 +28,7 @@ $(document).ready(function () {
 
 function renderSearchResult(routes) {
     if (routes.length === 0) {
-        return '<p class="fs-2 text-danger" style="text-align: center;">No available routes</p>';
+        return `<p class="fs-2 text-danger" style="text-align: center;">${i18n('noRoutes')}</p>`;
     }
     return '<ul class="list-group">'
         + routes.map(route => renderSearchResultLine(route))
@@ -51,12 +51,13 @@ function renderSearchResultLine(route) {
                          </div>
                          <div class="col-sm">${route.duration}</div>
                          <div class="col-sm">
-                             Available seats: ${route.availableSeats} / ${route.totalSeats}
+                            <div class="row">${i18n('availableSeats')}</div>
+                            <div class="row">${route.availableSeats} / ${route.totalSeats}</div>
                          </div>
                          <div class="col-sm">${route.pricePerSeat}</div>
-                         <div class="col-sm">
+                         <div class="col-sm-auto">
                             <a href="/routes/${route.routeId}">
-                                <button class="btn btn-success">View details</button>
+                                <button class="btn btn-success">${i18n('details')}</button>
                             </a>
                          </div>
                      </div>
