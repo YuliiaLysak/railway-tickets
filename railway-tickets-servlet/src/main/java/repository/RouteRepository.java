@@ -22,4 +22,6 @@ public interface RouteRepository {
     void deleteById(Long routeId);
 
     Optional<Route> findById(Long routeId);
+
+    void update(Route updatedRoute);
 }

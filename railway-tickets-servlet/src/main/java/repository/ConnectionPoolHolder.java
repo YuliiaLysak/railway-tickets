@@ -13,6 +13,7 @@ public class ConnectionPoolHolder {
             synchronized (ConnectionPoolHolder.class) {
                 if (dataSource == null) {
                     BasicDataSource ds = new BasicDataSource();
+//                    TODO - replace strings with application.properties key-value
                     ds.setDriverClassName("org.postgresql.Driver");
                     ds.setUrl("jdbc:postgresql://localhost:5432/railwaytickets");
                     ds.setUsername("postgres");

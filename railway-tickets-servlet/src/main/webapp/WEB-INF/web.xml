@@ -17,4 +17,13 @@
         <url-pattern>/api/stations/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>RouteServlet</servlet-name>
+        <servlet-class>servlets.RouteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RouteServlet</servlet-name>
+        <url-pattern>/api/routes/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>

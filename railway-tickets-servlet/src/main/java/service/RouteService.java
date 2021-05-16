@@ -63,7 +63,7 @@ public class RouteService {
 
         validateAndTransferInputData(routeDto, updatedRoute);
 
-        routeRepository.save(updatedRoute);
+        routeRepository.update(updatedRoute);
     }
 
     public List<SearchRouteResponseDto> getAvailableRoutes(SearchRouteRequestDto searchRouteRequestDto) {

@@ -29,12 +29,7 @@ public class StationRepositoryImpl implements StationRepository {
             preparedStatement.setString(++parameterIndex, name);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    Long id = resultSet.getLong("id");
-                    Station station = new Station();
-                    station.setId(id);
-                    station.setCity(city);
-                    station.setName(name);
-                    return station;
+                    return toStation(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -93,10 +88,7 @@ public class StationRepositoryImpl implements StationRepository {
             preparedStatement.setLong(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    Station station = new Station();
-                    station.setId(id);
-                    station.setCity(resultSet.getString("city"));
-                    station.setName(resultSet.getString("name"));
+                    Station station = toStation(resultSet);
                     return Optional.of(station);
                 }
             }
@@ -128,15 +120,20 @@ public class StationRepositoryImpl implements StationRepository {
              ResultSet resultSet = statement.executeQuery(query)
         ) {
             while (resultSet.next()) {
-                Station station = new Station();
-                station.setId(resultSet.getLong("id"));
-                station.setCity(resultSet.getString("city"));
-                station.setName(resultSet.getString("name"));
+                Station station = toStation(resultSet);
                 stations.add(station);
             }
         } catch (SQLException e) {
             LOGGER.severe(e.getMessage());
         }
         return stations;
+    }
+
+    private Station toStation(ResultSet resultSet) throws SQLException {
+        Station station = new Station();
+        station.setId(resultSet.getLong("id"));
+        station.setCity(resultSet.getString("city"));
+        station.setName(resultSet.getString("name"));
+        return station;
     }
 }
