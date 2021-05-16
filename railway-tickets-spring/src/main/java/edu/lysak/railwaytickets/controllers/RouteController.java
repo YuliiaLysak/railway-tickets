@@ -23,7 +23,7 @@ public class RouteController {
         return routeService.getAllRoutes();
     }
 
-    @PostMapping("/new")
+    @PostMapping
     public Route addNewRoute(@RequestBody RouteDto routeDto) {
         return routeService.addNewRoute(routeDto);
     }
@@ -33,7 +33,7 @@ public class RouteController {
         routeService.deleteRoute(routeId);
     }
 
-    @PutMapping("/{routeId}/edit")
+    @PutMapping("/{routeId}")
     public void updateRoute(@PathVariable Long routeId, @RequestBody RouteDto routeDto) {
         routeService.updateRoute(routeId, routeDto);
     }

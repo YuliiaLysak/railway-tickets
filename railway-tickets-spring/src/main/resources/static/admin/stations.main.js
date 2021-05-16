@@ -50,7 +50,7 @@ function updateStation() {
         }
         $.ajax({
             type: 'PUT',
-            url: '/api/stations/' + stationId + '/edit',
+            url: '/api/stations/' + stationId,
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(payload)
@@ -114,7 +114,7 @@ function addStation() {
         };
         $.ajax({
             type: 'POST',
-            url: '/api/stations/new',
+            url: '/api/stations',
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(payload)

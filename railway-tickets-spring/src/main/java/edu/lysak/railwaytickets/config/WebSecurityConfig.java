@@ -49,9 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/routes/*",
                         "/registration",
                         "/i18n/**",
-                        "/api/routes",
                         "/api/routes/search",   //todo - check if it is working
-                        "/api/stations",
                         "/style.css",
                         "/home.main.js",
                         "/tickets.main.js",
@@ -62,10 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(
                         "/admin/**",
-                        "/api/routes/*",
-                        "/api/stations/*",
-                        "/api/routes/*/edit",   //todo - check if it is working
-                        "/api/stations/*/edit") //todo - check if it is working
+                        "/api/routes/*", // todo - check if user and anonymous can edit or add new station/route
+                        "/api/stations/*") // todo - check if user and anonymous can edit or add new station/route
                 .hasAuthority("ADMIN")
                 .antMatchers("/api/tickets") //todo - check if it is working
                 .hasAuthority("USER")

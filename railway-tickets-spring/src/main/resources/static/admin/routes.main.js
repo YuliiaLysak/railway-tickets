@@ -105,7 +105,7 @@ function addRoute() {
 
         $.ajax({
             type: 'POST',
-            url: '/api/routes/new',
+            url: '/api/routes',
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(payload)
@@ -146,7 +146,7 @@ function updateRoute() {
 
         $.ajax({
             type: 'PUT',
-            url: '/api/routes/' + routeId + '/edit',
+            url: '/api/routes/' + routeId,
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(payload)

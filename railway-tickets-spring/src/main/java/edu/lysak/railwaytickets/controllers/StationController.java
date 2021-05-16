@@ -20,7 +20,7 @@ public class StationController {
         return stationService.getAllStations();
     }
 
-    @PostMapping("/new")
+    @PostMapping
     public Station addNewStation(@RequestBody Station station) {
         return stationService.addNewStation(station);
     }
@@ -30,7 +30,7 @@ public class StationController {
         stationService.deleteStation(stationId);
     }
 
-    @PutMapping("/{stationId}/edit")
+    @PutMapping("/{stationId}")
     public void updateStation(@PathVariable Long stationId, @RequestBody Station station) {
         stationService.updateStation(stationId, station);
     }
