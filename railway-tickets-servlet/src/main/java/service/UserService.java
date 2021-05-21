@@ -28,4 +28,12 @@ public class UserService {
         userRepository.save(user);
         return true;
     }
+
+    public User findByEmailAndPassword(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }
