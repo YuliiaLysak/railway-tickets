@@ -84,8 +84,9 @@ public class RouteRepositoryImpl implements RouteRepository {
             if (preparedStatement.executeUpdate() > 0) {
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        route.setId(generatedKeys.getLong(1));
-                        return route;
+                        return Route.builder(route)
+                                .id(generatedKeys.getLong(1))
+                                .build();
                     }
                 }
             }
@@ -227,16 +228,16 @@ public class RouteRepositoryImpl implements RouteRepository {
     }
 
     private Route toRoute(ResultSet resultSet, Station departureStation, Station arrivalStation) throws SQLException {
-        Route route = new Route();
-        route.setDepartureStation(departureStation);
-        route.setArrivalStation(arrivalStation);
-        route.setId(resultSet.getLong("route_id"));
-        route.setDepartureTime(resultSet.getTimestamp("route_departure_time").toLocalDateTime());
-        route.setArrivalTime(resultSet.getTimestamp("route_arrival_time").toLocalDateTime());
-        route.setTrainName(resultSet.getString("route_train_name"));
-        route.setTotalSeats(resultSet.getInt("route_total_seats"));
-        route.setPricePerSeat(resultSet.getDouble("route_price_per_seat"));
-        return route;
+        return Route.builder()
+                .departureStation(departureStation)
+                .arrivalStation(arrivalStation)
+                .id(resultSet.getLong("route_id"))
+                .departureTime(resultSet.getTimestamp("route_departure_time").toLocalDateTime())
+                .arrivalTime(resultSet.getTimestamp("route_arrival_time").toLocalDateTime())
+                .trainName(resultSet.getString("route_train_name"))
+                .totalSeats(resultSet.getInt("route_total_seats"))
+                .pricePerSeat((resultSet.getDouble("route_price_per_seat")))
+                .build();
     }
 
     private Station toDepartureStation(ResultSet resultSet) throws SQLException {

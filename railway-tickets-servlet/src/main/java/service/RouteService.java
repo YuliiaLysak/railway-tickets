@@ -39,8 +39,7 @@ public class RouteService {
     }
 
     public Route addNewRoute(RouteDto routeDto) {
-        Route route = new Route();
-        validateAndTransferInputData(routeDto, route);
+        Route route = validateAndTransferInputData(routeDto, null);
         return routeRepository.save(route);
     }
 
@@ -56,12 +55,12 @@ public class RouteService {
     }
 
     public void updateRoute(Long routeId, RouteDto routeDto) {
-        Route updatedRoute = routeRepository.findById(routeId)
+        Route routeFromDb = routeRepository.findById(routeId)
                 .orElseThrow(() -> new InputValidationException(String.format(
 //                        TODO - add this line with id to message
                         "Route with id = %d doesn't exist", routeId)));
 
-        validateAndTransferInputData(routeDto, updatedRoute);
+        Route updatedRoute = validateAndTransferInputData(routeDto, routeFromDb);
 
         routeRepository.update(updatedRoute);
     }
@@ -85,7 +84,7 @@ public class RouteService {
                 .collect(Collectors.toList());
     }
 
-    private void validateAndTransferInputData(RouteDto routeDto, Route route) {
+    private Route validateAndTransferInputData(RouteDto routeDto, Route route) {
         if (routeDto.getDepartureStationId() == null
                 || routeDto.getArrivalStationId() == null) {
             throw new InputValidationException("exception.station.empty");
@@ -124,13 +123,15 @@ public class RouteService {
             throw new InputValidationException("exception.price.negative");
         }
 
-        route.setDepartureStation(departureStation);
-        route.setArrivalStation(arrivalStation);
-        route.setDepartureTime(departureTime);
-        route.setArrivalTime(arrivalTime);
-        route.setTrainName(trainName);
-        route.setTotalSeats(totalSeats);
-        route.setPricePerSeat(pricePerSeat);
+        return Route.builder(route)
+                .departureStation(departureStation)
+                .arrivalStation(arrivalStation)
+                .departureTime(departureTime)
+                .arrivalTime(arrivalTime)
+                .trainName(trainName)
+                .totalSeats(totalSeats)
+                .pricePerSeat(pricePerSeat)
+                .build();
     }
 
     private SearchRouteResponseDto createSearchResponse(Route route) {
