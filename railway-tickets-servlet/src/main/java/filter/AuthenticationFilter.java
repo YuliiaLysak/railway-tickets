@@ -1,6 +1,5 @@
 package filter;
 
-import config.SecurityConfig;
 import model.Role;
 import model.SessionUser;
 
@@ -9,12 +8,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
 public class AuthenticationFilter implements Filter {
     private static final Logger LOGGER = Logger.getLogger(AuthenticationFilter.class.getName());
+
+    //    TODO - check if other pages needed to be secured with authorization
+    private static final Map<String, Set<Role>> mapConfig = Map.of(
+            "/api/tickets", Set.of(Role.USER),
+            "/admin/*", Set.of(Role.ADMIN),
+            "/api/routes/*", Set.of(Role.ADMIN),
+            "/api/stations/*", Set.of(Role.ADMIN)
+    );
 
     @Override
     public void doFilter(
@@ -36,7 +43,7 @@ public class AuthenticationFilter implements Filter {
 //        LOGGER.warning("getHttpServletMapping = " + request.getHttpServletMapping().getPattern());
 
 
-        if (isPermittedForEveryone(request)) {
+        if (hasPermission(request, Set.of())) {
             LOGGER.warning("Page is permitted for everyone");
             filterChain.doFilter(request, response);
             return;
@@ -65,30 +72,24 @@ public class AuthenticationFilter implements Filter {
                 .forward(request, response);
     }
 
-    // Check whether this 'request' is required to login or not.
-    private boolean isPermittedForEveryone(HttpServletRequest request) {
-        String url = request.getHttpServletMapping().getPattern();
-        Set<Role> roles = SecurityConfig.getAllAppRoles();
-
-        for (Role role : roles) {
-            List<String> urlPatterns = SecurityConfig.getUrlPatternsForRole(role);
-            if (urlPatterns != null && urlPatterns.contains(url)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // Check if this 'request' has a 'valid role'?
     private boolean hasPermission(HttpServletRequest request, Set<Role> roles) {
         String url = request.getHttpServletMapping().getPattern();
+        Set<Role> requiredRoles = getRequiredRoles(url);
+
+        if (requiredRoles == null || requiredRoles.isEmpty()) {
+            return true;
+        }
 
         for (Role role : roles) {
-            List<String> urlPatterns = SecurityConfig.getUrlPatternsForRole(role);
-            if (urlPatterns != null && urlPatterns.contains(url)) {
+            if (requiredRoles.contains(role)) {
                 return true;
             }
         }
+
         return false;
+    }
+
+    private Set<Role> getRequiredRoles(String url) {
+        return mapConfig.get(url);
     }
 }

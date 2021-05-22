@@ -131,7 +131,7 @@
     <div class="row">
         <div class="col">
             <h3>
-                <span>${routeDto.getDepartureStationName() + ' - ' + routeDto.getArrivalStationName()}</span>
+                <span>${routeDto.getDepartureStationName()} - ${routeDto.getArrivalStationName()}</span>
             </h3>
             <table class="table">
                 <tbody>
@@ -161,7 +161,7 @@
                 </tr>
                 <tr>
                     <td><fmt:message key="availableSeats"/></td>
-                    <th>${routeDto.getAvailableSeats() + ' / ' + routeDto.getTotalSeats()}</th>
+                    <th>${routeDto.getAvailableSeats()} / ${routeDto.getTotalSeats()}</th>
                 </tr>
                 <tr>
                     <td><fmt:message key="pricePerSeat"/></td>

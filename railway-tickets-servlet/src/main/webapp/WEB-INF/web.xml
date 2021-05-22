@@ -80,6 +80,15 @@
         <url-pattern>/routes/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>RouteSearchServlet</servlet-name>
+        <servlet-class>servlets.RouteSearchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RouteSearchServlet</servlet-name>
+        <url-pattern>/api/routes/search</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>filter.AuthenticationFilter</filter-class>
