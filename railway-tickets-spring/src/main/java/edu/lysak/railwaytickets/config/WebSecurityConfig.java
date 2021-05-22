@@ -9,8 +9,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 /**
@@ -27,8 +30,42 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private PasswordEncoder passwordEncoder;
 
     @Bean
+//    public PasswordEncoder getPasswordEncoder() {
+//        return new BCryptPasswordEncoder(8);
+//    }
     public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder(8);
+        return new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence password) {
+                StringBuilder result = new StringBuilder();
+                try {
+                    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                    digest.update(password.toString().getBytes());
+
+                    byte[] hash = digest.digest();
+                    for (byte b : hash) {
+                        result.append(String.format("%02X", b));
+                    }
+                } catch (NoSuchAlgorithmException exception) {
+//                    TODO - log
+                }
+
+                return result.toString();
+            }
+
+            @Override
+            public boolean matches(CharSequence rawPassword, String encodedPassword) {
+                if (rawPassword == null) {
+                    throw new IllegalArgumentException("rawPassword cannot be null");
+                } else if (encodedPassword != null && encodedPassword.length() != 0) {
+                    String passwordToCheck = encode(rawPassword);
+                    return MessageDigest.isEqual(encodedPassword.getBytes(StandardCharsets.UTF_8),
+                            passwordToCheck.getBytes(StandardCharsets.UTF_8));
+                } else {
+                    return false;
+                }
+            }
+        };
     }
 
     /**

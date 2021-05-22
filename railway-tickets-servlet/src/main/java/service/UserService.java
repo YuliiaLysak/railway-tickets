@@ -4,17 +4,18 @@ import model.Role;
 import model.User;
 import repository.UserRepository;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 public class UserService {
-    private final UserRepository userRepository;
-//    TODO - implement password encoder
-//    private final PasswordEncoder passwordEncoder;
+    private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
 
-//    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    private final UserRepository userRepository;
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-//        this.passwordEncoder = passwordEncoder;
     }
 
     public boolean addUser(User user) {
@@ -23,17 +24,30 @@ public class UserService {
             return false;
         }
         user.setRoles(Collections.singleton(Role.USER));
-        user.setPassword(user.getPassword());
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(encode(user.getPassword()));
         userRepository.save(user);
         return true;
     }
 
     public User findByEmailAndPassword(String email, String password) {
-        return userRepository.findByEmailAndPassword(email, password);
+        return userRepository.findByEmailAndPassword(email, encode(password));
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    private static String encode(String password) {
+        StringBuilder result = new StringBuilder();
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            digest.update(password.getBytes());
+
+            byte[] hash = digest.digest();
+            for (byte b : hash) {
+                result.append(String.format("%02X", b));
+            }
+        } catch (NoSuchAlgorithmException exception) {
+            LOGGER.warning("Could not encode password");
+            LOGGER.warning(exception.getMessage());
+        }
+
+        return result.toString();
     }
 }
