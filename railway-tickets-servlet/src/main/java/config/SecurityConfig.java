@@ -9,8 +9,6 @@ public class SecurityConfig {
     public static final Role ADMIN = Role.ADMIN;
     public static final Role USER = Role.USER;
 
-    // Role: role
-    // List<String>: urlPatterns
     private static final Map<Role, List<String>> mapConfig = new HashMap<>();
 
     static {
@@ -22,18 +20,14 @@ public class SecurityConfig {
 
         // Configure for Role.USER
         List<String> userUrlPatterns = new ArrayList<>();
-
         userUrlPatterns.add("/api/tickets");
-
         mapConfig.put(USER, userUrlPatterns);
 
         // Configure For Role.ADMIN
         List<String> adminUrlPatterns = new ArrayList<>();
-
-        adminUrlPatterns.add("/admin/**");
+        adminUrlPatterns.add("/admin/*");
         adminUrlPatterns.add("/api/routes/*");
         adminUrlPatterns.add("/api/stations/*");
-
         mapConfig.put(ADMIN, adminUrlPatterns);
     }
 

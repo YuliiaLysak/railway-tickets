@@ -9,10 +9,7 @@ public class User {
     private String phone;
     private String email;
     private String password;
-
-//  TODO - implement roles
     private Set<Role> roles;
-
 
     public Long getId() {
         return id;
