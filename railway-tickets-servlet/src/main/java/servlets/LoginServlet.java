@@ -45,10 +45,15 @@ public class LoginServlet extends HttpServlet {
                     user.getLastName(),
                     user.getRoles());
             session.setAttribute("sessionUser", sessionUser);
+
+            String redirectAfterLogin = (String) session.getAttribute("redirectAfterLogin");
+            if (redirectAfterLogin != null) {
+                session.removeAttribute("redirectAfterLogin");
+                response.sendRedirect(request.getContextPath() + redirectAfterLogin);
+                return;
+            }
         }
 
-        request.getServletContext()
-                .getRequestDispatcher("/WEB-INF/views/home.jsp")
-                .forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/");
     }
 }

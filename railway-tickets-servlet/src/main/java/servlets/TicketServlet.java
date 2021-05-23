@@ -25,11 +25,10 @@ public class TicketServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
-//            TODO - check if parameterName is correct
             Long routeId = Long.parseLong(request.getParameter("routeId"));
             HttpSession session = request.getSession();
             SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
-//
+
             TicketService ticketService = ServiceLocator.getTicketService();
             ticketService.buyTicket(sessionUser.getId(), routeId);
         } else {

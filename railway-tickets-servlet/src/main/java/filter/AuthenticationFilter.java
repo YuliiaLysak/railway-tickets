@@ -54,6 +54,8 @@ public class AuthenticationFilter implements Filter {
 
         if (sessionUser == null) {
             LOGGER.warning("Authentication required");
+            String redirectAfterLogin = request.getRequestURI();
+            session.setAttribute("redirectAfterLogin", redirectAfterLogin);
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }

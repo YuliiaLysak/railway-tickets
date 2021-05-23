@@ -49,8 +49,6 @@ public class RegistrationServlet extends HttpServlet {
             throw new BusinessLogicException("User with this email already exists");
         }
 
-        request.getServletContext()
-                .getRequestDispatcher("/WEB-INF/views/login.jsp")
-                .forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/login");
     }
 }

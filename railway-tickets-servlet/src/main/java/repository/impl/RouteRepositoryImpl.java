@@ -217,7 +217,7 @@ public class RouteRepositoryImpl implements RouteRepository {
             preparedStatement.setTimestamp(++parameterIndex, Timestamp.valueOf(departureDateStart));
             preparedStatement.setTimestamp(++parameterIndex, Timestamp.valueOf(departureDateEnd));
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
+                while (resultSet.next()) {
                     Station departureStation = toDepartureStation(resultSet);
                     Station arrivalStation = toArrivalStation(resultSet);
                     Route route = toRoute(resultSet, departureStation, arrivalStation);
