@@ -44,14 +44,7 @@ public class RouteService {
     }
 
     public void deleteRoute(Long routeId) {
-        try {
-            routeRepository.deleteById(routeId);
-//            TODO - check exception for constraint in database
-        } catch (Exception e) {
-            throw new BusinessLogicException(
-                    "exception.route.delete"
-            );
-        }
+        routeRepository.deleteById(routeId);
     }
 
     public void updateRoute(Long routeId, RouteDto routeDto) {
@@ -116,6 +109,12 @@ public class RouteService {
         Integer totalSeats = routeDto.getTotalSeats();
         if (totalSeats == null || totalSeats <= 0) {
             throw new InputValidationException("exception.seats.negative");
+        }
+        if (route != null) {
+            int purchasedSeats = ticketRepository.findPurchasedTickets(route.getId());
+            if (totalSeats < purchasedSeats) {
+                throw new InputValidationException("exception.seats.lessThanPurchased");
+            }
         }
 
         Double pricePerSeat = routeDto.getPricePerSeat();

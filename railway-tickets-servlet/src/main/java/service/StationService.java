@@ -24,14 +24,7 @@ public class StationService {
     }
 
     public void deleteStation(Long stationId) {
-        try {
-            stationRepository.deleteById(stationId);
-//            TODO - check exception for constraint in database
-        } catch (Exception e) {
-            throw new BusinessLogicException(
-                    "exception.station.delete"
-            );
-        }
+        stationRepository.deleteById(stationId);
     }
 
     public void updateStation(Long stationId, Station station) {

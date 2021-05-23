@@ -1,5 +1,6 @@
 package repository.impl;
 
+import exceptions.BusinessLogicException;
 import model.Route;
 import model.Station;
 import repository.RouteRepository;
@@ -105,7 +106,10 @@ public class RouteRepositoryImpl implements RouteRepository {
             preparedStatement.setLong(1, routeId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.severe(e.getMessage());
+            LOGGER.severe("exception.route.delete");
+            throw new BusinessLogicException(
+                    "exception.route.delete"
+            );
         }
     }
 

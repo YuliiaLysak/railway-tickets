@@ -121,6 +121,12 @@ public class RouteService {
         if (totalSeats == null || totalSeats <= 0) {
             throw new InputValidationException("exception.seats.negative");
         }
+        if (route != null) {
+            int purchasedSeats = ticketRepository.findPurchasedTickets(route.getId());
+            if (totalSeats < purchasedSeats) {
+                throw new InputValidationException("exception.seats.lessThanPurchased");
+            }
+        }
 
         Double pricePerSeat = routeDto.getPricePerSeat();
         if (pricePerSeat == null || pricePerSeat <= 0) {

@@ -1,5 +1,6 @@
 package repository.impl;
 
+import exceptions.BusinessLogicException;
 import model.Station;
 import repository.StationRepository;
 
@@ -107,7 +108,10 @@ public class StationRepositoryImpl implements StationRepository {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.severe(e.getMessage());
+            LOGGER.severe("exception.station.delete");
+            throw new BusinessLogicException(
+                    "exception.station.delete"
+            );
         }
     }
 
