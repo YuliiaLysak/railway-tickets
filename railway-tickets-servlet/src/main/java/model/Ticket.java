@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class Ticket {
     private Long id;
-    private User owner;
+    private Long userId;
     private Long routeId;
     private LocalDateTime purchaseDate;
 
@@ -16,12 +16,12 @@ public class Ticket {
         this.id = id;
     }
 
-    public User getOwner() {
-        return owner;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getRouteId() {

@@ -23,7 +23,7 @@ public class TicketRepositoryImpl implements TicketRepository {
                      query, Statement.RETURN_GENERATED_KEYS)
         ) {
             int parameterIndex = 0;
-            preparedStatement.setLong(++parameterIndex, ticket.getOwner().getId());
+            preparedStatement.setLong(++parameterIndex, ticket.getUserId());
             preparedStatement.setLong(++parameterIndex, ticket.getRouteId());
             preparedStatement.setTimestamp(++parameterIndex, Timestamp.valueOf(ticket.getPurchaseDate()));
             if (preparedStatement.executeUpdate() > 0) {

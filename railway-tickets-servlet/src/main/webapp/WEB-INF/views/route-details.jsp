@@ -175,10 +175,11 @@
                         <fmt:message key="purchase"/>
                     </button>
                 </div>
+                <div class="row pb-2 pt-1">
+                    <span class="invisible text-danger text-center">Error!</span>
+                </div>
             </c:if>
-            <div class="row pb-2 pt-1">
-                <span class="invisible text-danger text-center">Error!</span>
-            </div>
+
             <c:if test="${empty sessionUser}">
                 <div class="text-center">
                     <div><fmt:message key="questionTicket"/></div>
