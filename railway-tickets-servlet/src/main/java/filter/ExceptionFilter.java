@@ -27,6 +27,6 @@ public class ExceptionFilter implements Filter {
             out.print(exception.getMessage());
             out.flush();
         }
-
+// TODO - implement i18n for exception messages like "exception.stationName.empty" in everywhere
     }
 }

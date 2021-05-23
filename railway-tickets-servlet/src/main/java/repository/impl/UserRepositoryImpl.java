@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 public class UserRepositoryImpl implements UserRepository {
     private static final Logger LOGGER = Logger.getLogger(StationRepositoryImpl.class.getName());
+
     private final DataSource dataSource;
 
     public UserRepositoryImpl(DataSource dataSource) {
@@ -25,6 +26,7 @@ public class UserRepositoryImpl implements UserRepository {
                 "              first_name," +
                 "              last_name," +
                 "              phone," +
+                "              email," +
                 "              password" +
                 "        FROM users " +
                 "       WHERE email = ?";
@@ -34,15 +36,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setString(1, email);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    User user = new User();
-                    user.setId(resultSet.getLong("id"));
-                    user.setFirstName(resultSet.getString("first_name"));
-                    user.setLastName(resultSet.getString("last_name"));
-                    user.setPhone(resultSet.getString("phone"));
-                    user.setEmail(email);
-                    user.setPassword(resultSet.getString("password"));
-                    user.setRoles(findRolesByUserId(user.getId()));
-                    return user;
+                    return toUser(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -56,7 +50,9 @@ public class UserRepositoryImpl implements UserRepository {
         String query = "SELECT id," +
                 "              first_name," +
                 "              last_name," +
-                "              phone" +
+                "              phone," +
+                "              email," +
+                "              password" +
                 "       FROM users " +
                 "       WHERE email = ? AND password = ?";
         try (Connection connection = dataSource.getConnection();
@@ -67,15 +63,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setString(++parameterIndex, password);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    User user = new User();
-                    user.setId(resultSet.getLong("id"));
-                    user.setFirstName(resultSet.getString("first_name"));
-                    user.setLastName(resultSet.getString("last_name"));
-                    user.setPhone(resultSet.getString("phone"));
-                    user.setEmail(email);
-                    user.setPassword(password);
-                    user.setRoles(findRolesByUserId(user.getId()));
-                    return user;
+                    return toUser(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -157,5 +145,17 @@ public class UserRepositoryImpl implements UserRepository {
             LOGGER.severe(e.getMessage());
         }
         return Set.of();
+    }
+
+    private User toUser(ResultSet resultSet) throws SQLException {
+        User user = new User();
+        user.setId(resultSet.getLong("id"));
+        user.setFirstName(resultSet.getString("first_name"));
+        user.setLastName(resultSet.getString("last_name"));
+        user.setPhone(resultSet.getString("phone"));
+        user.setEmail(resultSet.getString("email"));
+        user.setPassword(resultSet.getString("password"));
+        user.setRoles(findRolesByUserId(user.getId()));
+        return user;
     }
 }

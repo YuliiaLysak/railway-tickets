@@ -21,7 +21,7 @@ public class StationRepositoryImpl implements StationRepository {
 
     @Override
     public Station findByCityAndName(String city, String name) {
-        String query = "SELECT * FROM stations WHERE city = ? AND name = ?";
+        String query = "SELECT id, city, name FROM stations WHERE city = ? AND name = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)
         ) {
@@ -82,7 +82,7 @@ public class StationRepositoryImpl implements StationRepository {
 
     @Override
     public Optional<Station> findById(Long id) {
-        String query = "SELECT * FROM stations WHERE id = ?";
+        String query = "SELECT id, city, name FROM stations WHERE id = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)
         ) {
@@ -117,7 +117,7 @@ public class StationRepositoryImpl implements StationRepository {
 
     @Override
     public List<Station> findAll() {
-        String query = "SELECT * FROM stations";
+        String query = "SELECT id, city, name FROM stations";
         List<Station> stations = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement();
