@@ -21,11 +21,11 @@ public class I18nController {
 
     @GetMapping("/i18n/{fileName}.properties")
     public String getI18nProperties(@PathVariable String fileName) throws IOException, URISyntaxException {
-        URL systemResource = ClassLoader.getSystemResource(fileName + ".properties");
-        if (systemResource == null) {
+        URL resource = I18nController.class.getClassLoader().getResource(fileName + ".properties");
+        if (resource == null) {
             log.warn("No resources file {}", fileName + ".properties");
             throw new BusinessLogicException("No resources file");
         }
-        return Files.readString(Paths.get(systemResource.toURI()));
+        return Files.readString(Paths.get(resource.toURI()));
     }
 }

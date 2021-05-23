@@ -3,10 +3,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="${param.lang}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="messages"/>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="${param.lang}">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="${sessionScope.locale}">
 <head>
 
     <!-- Required bootstrap meta tags -->
@@ -28,25 +28,24 @@
 
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/style.css"/>
 
-<%--    TODO - configure i18n for js in servlet--%>
-<%--    <!--    Script for i18n in js files-->--%>
-<%--    <script th:inline="javascript">--%>
-<%--        //Get default language--%>
-<%--        var LANG = [[${#locale.language}]];--%>
-<%--        //initialization i18n plug-in unit--%>
-<%--        $.i18n.properties({--%>
-<%--            path: '/i18n/',--%>
-<%--            name: 'messages',--%>
-<%--            language: LANG,--%>
-<%--            mode: 'both',--%>
-<%--            async: false--%>
-<%--        });--%>
+    <!--    Script for i18n in js files-->
+    <script>
+        //Get default language
+        var LANG = '${sessionScope.locale}';
+        //initialization i18n plug-in unit
+        $.i18n.properties({
+            path: '/i18n/',
+            name: 'messages',
+            language: LANG,
+            mode: 'both',
+            async: false
+        });
 
-<%--        //initialization i18n function--%>
-<%--        function i18n(msgKey) {--%>
-<%--            return $.i18n.map[msgKey];--%>
-<%--        }--%>
-<%--    </script>--%>
+        //initialization i18n function
+        function i18n(msgKey) {
+            return $.i18n.map[msgKey];
+        }
+    </script>
 
 </head>
 <body>
@@ -54,7 +53,8 @@
 <!--Start of header element-->
 <div class="container">
     <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-        <a href="${pageContext.request.contextPath}/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <a href="${pageContext.request.contextPath}/"
+           class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
             <svg class="bi me-2" width="40" height="32">
                 <use xlink:href="#bootstrap"></use>
             </svg>

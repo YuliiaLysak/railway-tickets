@@ -3,11 +3,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="${param.lang}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="messages"/>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="${param.lang}">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="${sessionScope.locale}">
 <head>
 
     <!-- Required bootstrap meta tags -->
