@@ -12,6 +12,8 @@ import service.TicketService;
 import service.UserService;
 
 import javax.sql.DataSource;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,7 +39,13 @@ public final class ServiceLocator {
         routeService = new RouteService(routeRepository, stationRepository, ticketRepository);
         stationService = new StationService(stationRepository);
         ticketService = new TicketService(ticketRepository, routeService);
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository, () -> {
+            try {
+                return MessageDigest.getInstance("SHA-256");
+            } catch (NoSuchAlgorithmException exception) {
+                throw new RuntimeException(exception);
+            }
+        });
     }
 
     private static Gson createGson() {

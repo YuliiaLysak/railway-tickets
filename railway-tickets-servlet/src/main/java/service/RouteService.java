@@ -77,6 +77,52 @@ public class RouteService {
                 .collect(Collectors.toList());
     }
 
+    public int getAvailableSeats(Route route) {
+        int totalSeats = route.getTotalSeats();
+        int purchasedSeats = ticketRepository.findPurchasedTickets(route.getId());
+        int availableSeats = totalSeats - purchasedSeats;
+        return Math.max(availableSeats, 0);
+    }
+
+    public Route findRouteById(Long routeId) {
+        return routeRepository.findById(routeId)
+                .orElseThrow(() -> new IllegalStateException(String.format(
+//                        TODO - add this line with id to message
+                        "Route with id = %d doesn't exist", routeId)));
+    }
+
+    public SearchRouteResponseDto getRouteResponseDto(Long routeId) {
+        Route route = findRouteById(routeId);
+        return createSearchResponse(route);
+    }
+
+    private SearchRouteResponseDto createSearchResponse(Route route) {
+        SearchRouteResponseDto responseDto = new SearchRouteResponseDto();
+
+        responseDto.setRouteId(route.getId());
+        responseDto.setTrainName(route.getTrainName());
+
+        String departureStationName = String.format("%s (%s)",
+                route.getDepartureStation().getCity(), route.getDepartureStation().getName());
+        responseDto.setDepartureStationName(departureStationName);
+
+        responseDto.setDepartureDateTime(route.getDepartureTime());
+
+        long seconds = Duration.between(route.getDepartureTime(), route.getArrivalTime()).toSeconds();
+        String duration = String.format("%d:%02d", seconds / 3600, (seconds % 3600) / 60);
+        responseDto.setDuration(duration);
+
+        String arrivalStationName = String.format("%s (%s)",
+                route.getArrivalStation().getCity(), route.getArrivalStation().getName());
+
+        responseDto.setArrivalStationName(arrivalStationName);
+        responseDto.setArrivalDateTime(route.getArrivalTime());
+        responseDto.setTotalSeats(route.getTotalSeats());
+        responseDto.setAvailableSeats(getAvailableSeats(route));
+        responseDto.setPricePerSeat(route.getPricePerSeat());
+        return responseDto;
+    }
+
     private Route validateAndTransferInputData(RouteDto routeDto, Route route) {
         if (routeDto.getDepartureStationId() == null
                 || routeDto.getArrivalStationId() == null) {
@@ -131,51 +177,5 @@ public class RouteService {
                 .totalSeats(totalSeats)
                 .pricePerSeat(pricePerSeat)
                 .build();
-    }
-
-    private SearchRouteResponseDto createSearchResponse(Route route) {
-        SearchRouteResponseDto responseDto = new SearchRouteResponseDto();
-
-        responseDto.setRouteId(route.getId());
-        responseDto.setTrainName(route.getTrainName());
-
-        String departureStationName = String.format("%s (%s)",
-                route.getDepartureStation().getCity(), route.getDepartureStation().getName());
-        responseDto.setDepartureStationName(departureStationName);
-
-        responseDto.setDepartureDateTime(route.getDepartureTime());
-
-        long seconds = Duration.between(route.getDepartureTime(), route.getArrivalTime()).toSeconds();
-        String duration = String.format("%d:%02d", seconds / 3600, (seconds % 3600) / 60);
-        responseDto.setDuration(duration);
-
-        String arrivalStationName = String.format("%s (%s)",
-                route.getArrivalStation().getCity(), route.getArrivalStation().getName());
-
-        responseDto.setArrivalStationName(arrivalStationName);
-        responseDto.setArrivalDateTime(route.getArrivalTime());
-        responseDto.setTotalSeats(route.getTotalSeats());
-        responseDto.setAvailableSeats(getAvailableSeats(route));
-        responseDto.setPricePerSeat(route.getPricePerSeat());
-        return responseDto;
-    }
-
-    public int getAvailableSeats(Route route) {
-        int totalSeats = route.getTotalSeats();
-        int purchasedSeats = ticketRepository.findPurchasedTickets(route.getId());
-        int availableSeats = totalSeats - purchasedSeats;
-        return Math.max(availableSeats, 0);
-    }
-
-    public Route findRouteById(Long routeId) {
-        return routeRepository.findById(routeId)
-                .orElseThrow(() -> new IllegalStateException(String.format(
-//                        TODO - add this line with id to message
-                        "Route with id = %d doesn't exist", routeId)));
-    }
-
-    public SearchRouteResponseDto getRouteResponseDto(Long routeId) {
-        Route route = findRouteById(routeId);
-        return createSearchResponse(route);
     }
 }

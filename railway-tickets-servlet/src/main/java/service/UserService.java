@@ -5,17 +5,20 @@ import model.User;
 import repository.UserRepository;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 public class UserService {
+    //    TODO - change logger to log4j
     private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
 
     private final UserRepository userRepository;
+    private final Supplier<MessageDigest> digestFactory;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, Supplier<MessageDigest> digestFactory) {
         this.userRepository = userRepository;
+        this.digestFactory = digestFactory;
     }
 
     public boolean addUser(User user) {
@@ -33,19 +36,14 @@ public class UserService {
         return userRepository.findByEmailAndPassword(email, encode(password));
     }
 
-    private static String encode(String password) {
-        StringBuilder result = new StringBuilder();
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            digest.update(password.getBytes());
+    private String encode(String password) {
+        var result = new StringBuilder();
+        MessageDigest digest = digestFactory.get();
+        digest.update(password.getBytes());
 
-            byte[] hash = digest.digest();
-            for (byte b : hash) {
-                result.append(String.format("%02X", b));
-            }
-        } catch (NoSuchAlgorithmException exception) {
-            LOGGER.warning("Could not encode password");
-            LOGGER.warning(exception.getMessage());
+        byte[] hash = digest.digest();
+        for (byte b : hash) {
+            result.append(String.format("%02X", b));
         }
 
         return result.toString();
