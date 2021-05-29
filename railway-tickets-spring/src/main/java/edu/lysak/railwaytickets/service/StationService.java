@@ -31,9 +31,7 @@ public class StationService {
         try {
             stationRepository.deleteById(stationId);
         } catch (DataIntegrityViolationException e) {
-            throw new BusinessLogicException(
-                    "exception.station.delete"
-            );
+            throw new BusinessLogicException("exception.station.delete");
         }
     }
 

@@ -567,12 +567,13 @@ public class RouteServiceTest {
     }
 
     @Test
-    @DisplayName("#findRouteById(Long) should throw IllegalStateException if route doesn't exist")
+    @DisplayName("#findRouteById(Long) should throw InputValidationException if route doesn't exist")
     public void findRouteById_ShouldThrowExceptionIfRouteDoesntExist() {
         given(routeRepository.findById(any())).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> routeService.findRouteById(1L))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(InputValidationException.class)
+                .hasMessageContaining("exception.route.notExist");
 
         verify(routeRepository).findById(any());
     }

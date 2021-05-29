@@ -49,9 +49,7 @@ public class RouteService {
 
     public void updateRoute(Long routeId, RouteDto routeDto) {
         Route routeFromDb = routeRepository.findById(routeId)
-                .orElseThrow(() -> new InputValidationException(String.format(
-//                        TODO - add this line with id to message
-                        "Route with id = %d doesn't exist", routeId)));
+                .orElseThrow(() -> new InputValidationException("exception.route.notExist"));
 
         Route updatedRoute = validateAndTransferInputData(routeDto, routeFromDb);
 
@@ -86,9 +84,7 @@ public class RouteService {
 
     public Route findRouteById(Long routeId) {
         return routeRepository.findById(routeId)
-                .orElseThrow(() -> new IllegalStateException(String.format(
-//                        TODO - add this line with id to message
-                        "Route with id = %d doesn't exist", routeId)));
+                .orElseThrow(() -> new InputValidationException("exception.route.notExist"));
     }
 
     public SearchRouteResponseDto getRouteResponseDto(Long routeId) {

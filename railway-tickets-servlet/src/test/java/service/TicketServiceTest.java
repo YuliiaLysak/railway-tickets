@@ -67,7 +67,7 @@ class TicketServiceTest {
 
         assertThatThrownBy(() -> ticketService.buyTicket(1L, 5L))
                 .isInstanceOf(BusinessLogicException.class)
-                .hasMessageContaining("exception.ticket.available");
+                .hasMessageContaining("exception.ticket.unavailable");
 
         verify(ticketRepository, never()).save(any(Ticket.class));
     }

@@ -51,18 +51,14 @@ public class RouteService {
         try {
             routeRepository.deleteById(routeId);
         } catch (DataIntegrityViolationException e) {
-            throw new BusinessLogicException(
-                    "exception.route.delete"
-            );
+            throw new BusinessLogicException("exception.route.delete");
         }
     }
 
     @Transactional
     public void updateRoute(Long routeId, RouteDto routeDto) {
         Route updatedRoute = routeRepository.findById(routeId)
-                .orElseThrow(() -> new InputValidationException(String.format(
-//                        TODO - add this line with id to message
-                        "Route with id = %d doesn't exist", routeId)));
+                .orElseThrow(() -> new InputValidationException("exception.route.notExist"));
 
         validateAndTransferInputData(routeDto, updatedRoute);
 
@@ -178,9 +174,7 @@ public class RouteService {
 
     public Route findRouteById(Long routeId) {
         return routeRepository.findById(routeId)
-                .orElseThrow(() -> new IllegalStateException(String.format(
-//                        TODO - add this line with id to message
-                        "Route with id = %d doesn't exist", routeId)));
+                .orElseThrow(() -> new InputValidationException("exception.route.notExist"));
     }
 
     public SearchRouteResponseDto getRouteResponseDto(Long routeId) {
