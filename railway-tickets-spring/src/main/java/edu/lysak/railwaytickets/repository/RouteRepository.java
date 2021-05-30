@@ -2,6 +2,7 @@ package edu.lysak.railwaytickets.repository;
 
 import edu.lysak.railwaytickets.model.Route;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,4 +24,8 @@ public interface RouteRepository extends JpaRepository<Route, Long> {
             @Param("departureDateStart") LocalDateTime departureDateStart,
             @Param("departureDateEnd") LocalDateTime departureDateEnd
     );
+
+    @Modifying
+    @Query("DELETE FROM Route WHERE id = :id")
+    void deleteById(@Param("id") Long id);
 }

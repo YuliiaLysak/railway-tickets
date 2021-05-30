@@ -1,10 +1,10 @@
 package edu.lysak.railwaytickets.controllers;
 
+import edu.lysak.railwaytickets.dto.PageableResponse;
 import edu.lysak.railwaytickets.model.Station;
 import edu.lysak.railwaytickets.service.StationService;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/stations")
@@ -16,8 +16,16 @@ public class StationController {
     }
 
     @GetMapping
-    public List<Station> getAllStations() {
-        return stationService.getAllStations();
+    public PageableResponse<Station> getAllStationsPaginated(
+            @RequestParam(required = false, defaultValue = "1") int pageNo,
+            @RequestParam(required = false, defaultValue = "10") int pageSize
+    ) {
+        Page<Station> stations = stationService.getAllStationsPaginated(pageNo, pageSize);
+        return new PageableResponse<>(
+                Math.max(Math.min(pageNo, stations.getTotalPages()), 1),
+                stations.getTotalPages(),
+                stations.getContent()
+        );
     }
 
     @PostMapping

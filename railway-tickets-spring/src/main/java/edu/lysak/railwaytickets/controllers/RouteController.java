@@ -1,10 +1,12 @@
 package edu.lysak.railwaytickets.controllers;
 
+import edu.lysak.railwaytickets.dto.PageableResponse;
 import edu.lysak.railwaytickets.dto.RouteDto;
 import edu.lysak.railwaytickets.dto.SearchRouteRequestDto;
 import edu.lysak.railwaytickets.dto.SearchRouteResponseDto;
 import edu.lysak.railwaytickets.model.Route;
 import edu.lysak.railwaytickets.service.RouteService;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +21,16 @@ public class RouteController {
     }
 
     @GetMapping
-    public List<Route> getAllRoutes() {
-        return routeService.getAllRoutes();
+    public PageableResponse<Route> getAllRoutesPaginated(
+            @RequestParam(required = false, defaultValue = "1") int pageNo,
+            @RequestParam(required = false, defaultValue = "5") int pageSize
+    ) {
+        Page<Route> routes = routeService.getAllRoutesPaginated(pageNo, pageSize);
+        return new PageableResponse<>(
+                Math.max(Math.min(pageNo, routes.getTotalPages()), 1),
+                routes.getTotalPages(),
+                routes.getContent()
+        );
     }
 
     @PostMapping

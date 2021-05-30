@@ -41,23 +41,31 @@ function refreshRoutesData(selectedRouteId) {
         .then(() => {
             $('.btn-route').click(function (event) {
 
-                $('#departureStation').change();
-                $('#arrivalStation').change();
-                $('#departureTime').change();
-                $('#arrivalTime').change();
-                $('#trainName').change();
-                $('#totalSeats').change();
-                $('#pricePerSeat').change();
+                let $departureStation = $('#departureStation');
+                let $arrivalStation = $('#arrivalStation');
+                let $departureTime = $('#departureTime');
+                let $arrivalTime = $('#arrivalTime');
+                let $trainName = $('#trainName');
+                let $totalSeats = $('#totalSeats');
+                let $pricePerSeat = $('#pricePerSeat');
+
+                $departureStation.change();
+                $arrivalStation.change();
+                $departureTime.change();
+                $arrivalTime.change();
+                $trainName.change();
+                $totalSeats.change();
+                $pricePerSeat.change();
 
                 let $selectedItem = $(event.currentTarget);
                 $('#routeId')[0].value = $selectedItem.data('route-id');
-                $('#departureStation')[0].value = $selectedItem.data('route-departure-station-id');
-                $('#arrivalStation')[0].value = $selectedItem.data('route-arrival-station-id');
-                $('#departureTime')[0].value = $selectedItem.data('route-departure-time');
-                $('#arrivalTime')[0].value = $selectedItem.data('route-arrival-time');
-                $('#trainName')[0].value = $selectedItem.data('route-train-name');
-                $('#totalSeats')[0].value = $selectedItem.data('route-total-seats');
-                $('#pricePerSeat')[0].value = $selectedItem.data('route-price-per-seat');
+                $departureStation[0].value = $selectedItem.data('route-departure-station-id');
+                $arrivalStation[0].value = $selectedItem.data('route-arrival-station-id');
+                $departureTime[0].value = $selectedItem.data('route-departure-time');
+                $arrivalTime[0].value = $selectedItem.data('route-arrival-time');
+                $trainName[0].value = $selectedItem.data('route-train-name');
+                $totalSeats[0].value = $selectedItem.data('route-total-seats');
+                $pricePerSeat[0].value = $selectedItem.data('route-price-per-seat');
             });
         });
 }
@@ -76,8 +84,9 @@ function deleteRoute() {
         })
             .always(() => refreshRoutesData(+routeId))
         .fail(function (xhr, status, error) {
-            $('.text-danger').removeClass('invisible');
-            $('.text-danger')[0].innerText = xhr.responseText;
+            let $error = $('.error-message');
+            $error.removeClass('invisible');
+            $error[0].innerText = xhr.responseText;
         });
     });
 }
@@ -112,8 +121,9 @@ function addRoute() {
         })
             .then(response => refreshRoutesData(response.id))
             .fail(function (xhr, status, error) {
-                $('.text-danger').removeClass('invisible');
-                $('.text-danger')[0].innerText = xhr.responseText;
+                let $error = $('.error-message');
+                $error.removeClass('invisible');
+                $error[0].innerText = xhr.responseText;
             });
     });
 }
@@ -155,68 +165,68 @@ function updateRoute() {
                 refreshRoutesData(+routeId);
             })
             .fail(function (xhr, status, error) {
-                $('.text-danger').removeClass('invisible');
-                $('.text-danger')[0].innerText = xhr.responseText;
+                let $error = $('.error-message');
+                $error.removeClass('invisible');
+                $error[0].innerText = xhr.responseText;
             });
     });
 }
 
 function addListenerToHideErrorMessage() {
-    $("#departureStation").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $departureStation = $("#departureStation");
+    $departureStation.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $departureStation.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#arrivalStation").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $arrivalStation = $("#arrivalStation");
+    $arrivalStation.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $arrivalStation.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#departureTime").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $departureTime = $("#departureTime");
+    $departureTime.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $departureTime.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#arrivalTime").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $arrivalTime = $("#arrivalTime");
+    $arrivalTime.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $arrivalTime.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#trainName").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $trainName = $("#trainName");
+    $trainName.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $trainName.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#totalSeats").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $totalSeats = $("#totalSeats");
+    $totalSeats.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $totalSeats.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#pricePerSeat").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $pricePerSeat = $("#pricePerSeat");
+    $pricePerSeat.on('input', function () {
+        $('.error-message').addClass('invisible');
     });
-
-
-    $("#departureStation").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#arrivalStation").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#departureTime").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#arrivalTime").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#trainName").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#totalSeats").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#pricePerSeat").on('change', function () {
-        $('.text-danger').addClass('invisible');
+    $pricePerSeat.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 }
 

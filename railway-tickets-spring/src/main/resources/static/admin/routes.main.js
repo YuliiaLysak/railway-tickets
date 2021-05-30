@@ -1,7 +1,7 @@
 $(document).ready(function () {
     loadStations();
 
-    refreshRoutesData();
+    refreshRoutesData(1, null);
 
     updateRoute();
     deleteRoute();
@@ -13,14 +13,15 @@ $(document).ready(function () {
 function loadStations() {
     $.ajax({
         type: 'GET',
-        url: '/api/stations',
+        url: '/api/stations?pageSize=500',
         contentType: 'application/json'
     })
-        .then(stations => stations.forEach(
+        .then(pageableStations => pageableStations.content.forEach(
             station => buildSelectStation(station)
         ));
 }
 
+// TODO - replace with autocomplete datalist https://getbootstrap.com/docs/5.0/forms/form-control/#datalists
 function buildSelectStation(station) {
     let option = `<option value="${station.id}">
                         ${station.city} (${station.name})</option>`;
@@ -28,37 +29,55 @@ function buildSelectStation(station) {
     $('#arrivalStation').append(option);
 }
 
-function refreshRoutesData(selectedRouteId) {
+function refreshRoutesData(pageNo, selectedRouteId) {
     $.ajax({
         type: 'GET',
-        url: '/api/routes',
+        url: `/api/routes?pageNo=${pageNo}`,
         contentType: 'application/json'
     })
-        .then(routes => renderRoutes(routes, selectedRouteId))
+        .then(pageableRoutes => renderRoutes(pageableRoutes, selectedRouteId))
         .then(renderedRoutes => $('.routes-list')[0].innerHTML = renderedRoutes)
 
-        // method for handling selection of route
+        // method for handling selection of route and page
         .then(() => {
             $('.btn-route').click(function (event) {
 
-                $('#departureStation').change();
-                $('#arrivalStation').change();
-                $('#departureTime').change();
-                $('#arrivalTime').change();
-                $('#trainName').change();
-                $('#totalSeats').change();
-                $('#pricePerSeat').change();
+                let $departureStation = $('#departureStation');
+                let $arrivalStation = $('#arrivalStation');
+                let $departureTime = $('#departureTime');
+                let $arrivalTime = $('#arrivalTime');
+                let $trainName = $('#trainName');
+                let $totalSeats = $('#totalSeats');
+                let $pricePerSeat = $('#pricePerSeat');
+
+                $departureStation.change();
+                $arrivalStation.change();
+                $departureTime.change();
+                $arrivalTime.change();
+                $trainName.change();
+                $totalSeats.change();
+                $pricePerSeat.change();
 
                 let $selectedItem = $(event.currentTarget);
                 $('#routeId')[0].value = $selectedItem.data('route-id');
-                $('#departureStation')[0].value = $selectedItem.data('route-departure-station-id');
-                $('#arrivalStation')[0].value = $selectedItem.data('route-arrival-station-id');
-                $('#departureTime')[0].value = $selectedItem.data('route-departure-time');
-                $('#arrivalTime')[0].value = $selectedItem.data('route-arrival-time');
-                $('#trainName')[0].value = $selectedItem.data('route-train-name');
-                $('#totalSeats')[0].value = $selectedItem.data('route-total-seats');
-                $('#pricePerSeat')[0].value = $selectedItem.data('route-price-per-seat');
+                $departureStation[0].value = $selectedItem.data('route-departure-station-id');
+                $arrivalStation[0].value = $selectedItem.data('route-arrival-station-id');
+                $departureTime[0].value = $selectedItem.data('route-departure-time');
+                $arrivalTime[0].value = $selectedItem.data('route-arrival-time');
+                $trainName[0].value = $selectedItem.data('route-train-name');
+                $totalSeats[0].value = $selectedItem.data('route-total-seats');
+                $pricePerSeat[0].value = $selectedItem.data('route-price-per-seat');
             });
+
+            $('.page-item').click(function (event) {
+                event.preventDefault();
+                $('.page-item').click(function () {
+                    $(this).removeClass('active');
+                });
+                let $selectedItem = $(event.target);
+                let pageNo = $selectedItem.data('page-no');
+                refreshRoutesData(pageNo, null);
+            })
         });
 }
 
@@ -71,14 +90,15 @@ function deleteRoute() {
         }
         $.ajax({
             type: 'DELETE',
-            url: '/api/routes/' + routeId,
+            url: `/api/routes/${routeId}`,
             contentType: 'application/json'
         })
-            .always(() => refreshRoutesData(+routeId))
-        .fail(function (xhr, status, error) {
-            $('.text-danger').removeClass('invisible');
-            $('.text-danger')[0].innerText = xhr.responseText;
-        });
+            .always(() => refreshRoutesData(1, +routeId))
+            .fail(function (xhr, status, error) {
+                let $error = $('.error-message');
+                $error.removeClass('invisible');
+                $error[0].innerText = xhr.responseText;
+            });
     });
 }
 
@@ -110,10 +130,11 @@ function addRoute() {
             dataType: 'json',
             data: JSON.stringify(payload)
         })
-            .then(response => refreshRoutesData(response.id))
+            .then(response => refreshRoutesData(getTotalPages(), response.id))
             .fail(function (xhr, status, error) {
-                $('.text-danger').removeClass('invisible');
-                $('.text-danger')[0].innerText = xhr.responseText;
+                let $error = $('.error-message');
+                $error.removeClass('invisible');
+                $error[0].innerText = xhr.responseText;
             });
     });
 }
@@ -146,86 +167,89 @@ function updateRoute() {
 
         $.ajax({
             type: 'PUT',
-            url: '/api/routes/' + routeId,
+            url: `/api/routes/${routeId}`,
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(payload)
         })
             .always(function () {
-                refreshRoutesData(+routeId);
+                refreshRoutesData(getTotalPages(), +routeId);
             })
             .fail(function (xhr, status, error) {
-                $('.text-danger').removeClass('invisible');
-                $('.text-danger')[0].innerText = xhr.responseText;
+                let $error = $('.error-message');
+                $error.removeClass('invisible');
+                $error[0].innerText = xhr.responseText;
             });
     });
 }
 
 function addListenerToHideErrorMessage() {
-    $("#departureStation").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $departureStation = $("#departureStation");
+    $departureStation.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $departureStation.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#arrivalStation").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $arrivalStation = $("#arrivalStation");
+    $arrivalStation.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $arrivalStation.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#departureTime").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $departureTime = $("#departureTime");
+    $departureTime.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $departureTime.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#arrivalTime").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $arrivalTime = $("#arrivalTime");
+    $arrivalTime.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $arrivalTime.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#trainName").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $trainName = $("#trainName");
+    $trainName.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $trainName.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#totalSeats").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $totalSeats = $("#totalSeats");
+    $totalSeats.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $totalSeats.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#pricePerSeat").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $pricePerSeat = $("#pricePerSeat");
+    $pricePerSeat.on('input', function () {
+        $('.error-message').addClass('invisible');
     });
-
-
-    $("#departureStation").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#arrivalStation").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#departureTime").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#arrivalTime").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#trainName").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#totalSeats").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#pricePerSeat").on('change', function () {
-        $('.text-danger').addClass('invisible');
+    $pricePerSeat.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 }
 
-function renderRoutes(routes, selectedRouteId) {
-    if (routes.length === 0) {
+function renderRoutes(pageableRoutes, selectedRouteId) {
+    if (pageableRoutes.totalPages === 0) {
         return `<p class="fs-4 text-danger" style="text-align: center;">${i18n('noRoutes')}</p>`;
     }
-    return routes.map((route, index) => renderRouteLine(route, selectedRouteId, index))
+    let routeList = pageableRoutes.content
+        .map((route, index) => renderRouteLine(route, selectedRouteId, index))
         .reduce((a, b) => a + b, '');
+    let pageBar = renderPageBar(pageableRoutes.currentPage, pageableRoutes.totalPages);
+    return routeList + pageBar;
 }
 
 function renderRouteLine(route, selectedRouteId, index) {
@@ -297,4 +321,27 @@ function renderRouteLine(route, selectedRouteId, index) {
                         </div>
                     </div>
                 </div>`;
+}
+
+function renderPageBar(currentPage, totalPages) {
+    let pageBar = '<ul class="pagination justify-content-center" style="margin:20px 0">';
+    pageBar += renderPageNumber(Math.max(currentPage - 1, 1), totalPages, '&laquo;', '');
+    for (let i = 1; i <= totalPages; i++) {
+        let activeClass = (i === currentPage) ? 'active' : '';
+        pageBar += renderPageNumber(i, totalPages, i, activeClass);
+    }
+    pageBar += renderPageNumber(Math.min(currentPage + 1, totalPages), totalPages, '&raquo;', '');
+    pageBar += '</ul>';
+    return pageBar;
+}
+
+function renderPageNumber(pageNo, totalPages, text, activeClass) {
+    return `<li class="page-item ${activeClass}">
+                <a class="page-link" data-page-no="${pageNo}" data-page-total="${totalPages}">${text}</a>
+            </li>`;
+}
+
+function getTotalPages() {
+    let $pageElement = $('.page-item.active > .page-link')[0];
+    return $($pageElement).data('page-total') || 1;
 }

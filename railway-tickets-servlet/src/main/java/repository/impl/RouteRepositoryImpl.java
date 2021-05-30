@@ -92,7 +92,10 @@ public class RouteRepositoryImpl implements RouteRepository {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.getMessage());
+            LOGGER.severe("exception.route.exist");
+            throw new BusinessLogicException(
+                    "exception.route.exist"
+            );
         }
         return null;
     }

@@ -22,4 +22,8 @@ public interface StationRepository extends JpaRepository<Station, Long> {
             @Param("city") String city,
             @Param("name") String name
     );
+
+    @Modifying
+    @Query("DELETE FROM Station WHERE id = :id")
+    void deleteById(@Param("id") Long id);
 }

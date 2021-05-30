@@ -21,16 +21,18 @@ function refreshStationData(selectedStationId) {
         .then(() => {
             $('.list-group-item-action').click(function (event) {
                 event.preventDefault();
-                $('#stationCity').change();
-                $('#stationName').change();
+                let $stationCity = $('#stationCity');
+                let $stationName = $('#stationName');
+                $stationCity.change();
+                $stationName.change();
                 $('.list-group-item-action').each(function () {
                     $(this).removeClass('active');
                 });
                 let $selectedItem = $(event.target);
                 $selectedItem.addClass('active');
                 $('#stationId')[0].value = $selectedItem.data('station-id');
-                $('#stationCity')[0].value = $selectedItem.data('station-city');
-                $('#stationName')[0].value = $selectedItem.data('station-name');
+                $stationCity[0].value = $selectedItem.data('station-city');
+                $stationName[0].value = $selectedItem.data('station-name');
             });
         });
 }
@@ -59,8 +61,9 @@ function updateStation() {
                 refreshStationData(+stationId);
             })
             .fail(function (xhr, status, error) {
-                $('.text-danger').removeClass('invisible');
-                $('.text-danger')[0].innerText = xhr.responseText;
+                let $error = $('.error-message');
+                $error.removeClass('invisible');
+                $error[0].innerText = xhr.responseText;
             });
     });
 }
@@ -79,27 +82,28 @@ function deleteStation() {
         })
             .always(() => refreshStationData(+stationId))
             .fail(function (xhr, status, error) {
-                $('.text-danger').removeClass('invisible');
-                $('.text-danger')[0].innerText = xhr.responseText;
+                let $error = $('.error-message');
+                $error.removeClass('invisible');
+                $error[0].innerText = xhr.responseText;
             });
     });
 }
 
 function addListenerToHideErrorMessage() {
-    $("#stationCity").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $stationCity = $("#stationCity");
+    $stationCity.on('input', function () {
+        $('.error-message').addClass('invisible');
+    });
+    $stationCity.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 
-    $("#stationName").on('input', function () {
-        $('.text-danger').addClass('invisible');
+    let $stationName = $("#stationName");
+    $stationName.on('input', function () {
+        $('.error-message').addClass('invisible');
     });
-
-    $("#stationCity").on('change', function () {
-        $('.text-danger').addClass('invisible');
-    });
-
-    $("#stationName").on('change', function () {
-        $('.text-danger').addClass('invisible');
+    $stationName.on('change', function () {
+        $('.error-message').addClass('invisible');
     });
 }
 
@@ -121,8 +125,9 @@ function addStation() {
         })
             .then(response => refreshStationData(response.id))
             .fail(function (xhr, status, error) {
-                $('.text-danger').removeClass('invisible');
-                $('.text-danger')[0].innerText = xhr.responseText;
+                let $error = $('.error-message');
+                $error.removeClass('invisible');
+                $error[0].innerText = xhr.responseText;
             });
     });
 }

@@ -5,10 +5,11 @@ import edu.lysak.railwaytickets.exceptions.InputValidationException;
 import edu.lysak.railwaytickets.model.Station;
 import edu.lysak.railwaytickets.repository.StationRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
-import java.util.List;
 
 @Service
 public class StationService {
@@ -18,8 +19,9 @@ public class StationService {
         this.stationRepository = stationRepository;
     }
 
-    public List<Station> getAllStations() {
-        return stationRepository.findAll();
+    public Page<Station> getAllStationsPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        return stationRepository.findAll(pageable);
     }
 
     public Station addNewStation(Station station) {

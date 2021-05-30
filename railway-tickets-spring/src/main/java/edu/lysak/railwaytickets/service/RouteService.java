@@ -11,6 +11,9 @@ import edu.lysak.railwaytickets.repository.RouteRepository;
 import edu.lysak.railwaytickets.repository.StationRepository;
 import edu.lysak.railwaytickets.repository.TicketRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -37,14 +40,19 @@ public class RouteService {
         this.ticketRepository = ticketRepository;
     }
 
-    public List<Route> getAllRoutes() {
-        return routeRepository.findAll();
+    public Page<Route> getAllRoutesPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        return routeRepository.findAll(pageable);
     }
 
     public Route addNewRoute(RouteDto routeDto) {
         Route route = new Route();
         validateAndTransferInputData(routeDto, route);
-        return routeRepository.save(route);
+        try {
+            return routeRepository.save(route);
+        } catch (DataIntegrityViolationException exception) {
+            throw new BusinessLogicException("exception.route.exist");
+        }
     }
 
     public void deleteRoute(Long routeId) {
@@ -65,6 +73,7 @@ public class RouteService {
         routeRepository.save(updatedRoute);
     }
 
+    // TODO - add pagination for search result
     public List<SearchRouteResponseDto> getAvailableRoutes(SearchRouteRequestDto searchRouteRequestDto) {
         String departureCity = searchRouteRequestDto.getDepartureStation().getCity();
         String arrivalCity = searchRouteRequestDto.getArrivalStation().getCity();

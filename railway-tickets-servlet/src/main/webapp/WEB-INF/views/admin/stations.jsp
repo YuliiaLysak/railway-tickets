@@ -140,7 +140,7 @@
                     </div>
 
                     <div class="row pb-2 pt-1">
-                        <span class="invisible text-danger">Error!</span>
+                        <span class="invisible text-danger error-message">Error: Fuuuuuuuuuu!</span>
                     </div>
 
 
