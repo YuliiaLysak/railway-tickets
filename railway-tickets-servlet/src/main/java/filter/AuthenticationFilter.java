@@ -66,11 +66,10 @@ public class AuthenticationFilter implements Filter {
             return;
         }
 
-        // TODO - add http403.jsp file
         LOGGER.warning("Access denied!");
         response.setStatus(403);
         request.getServletContext()
-                .getRequestDispatcher("/WEB-INF/views/http403.jsp")
+                .getRequestDispatcher("/WEB-INF/views/errors/403forbidden.jsp")
                 .forward(request, response);
     }
 
