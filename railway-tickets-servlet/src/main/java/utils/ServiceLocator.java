@@ -2,14 +2,8 @@ package utils;
 
 import com.google.gson.*;
 import repository.ConnectionPoolHolder;
-import repository.impl.RouteRepositoryImpl;
-import repository.impl.StationRepositoryImpl;
-import repository.impl.TicketRepositoryImpl;
-import repository.impl.UserRepositoryImpl;
-import service.RouteService;
-import service.StationService;
-import service.TicketService;
-import service.UserService;
+import repository.impl.*;
+import service.*;
 
 import javax.sql.DataSource;
 import java.security.MessageDigest;
@@ -24,6 +18,7 @@ public final class ServiceLocator {
     private static final StationService stationService;
     private static final TicketService ticketService;
     private static final UserService userService;
+    private static final SessionAnalyticService sessionAnalyticService;
     private static final Gson gson;
 
     static {
@@ -31,10 +26,11 @@ public final class ServiceLocator {
 
         gson = createGson();
 
-        RouteRepositoryImpl routeRepository = new RouteRepositoryImpl(dataSource);
-        StationRepositoryImpl stationRepository = new StationRepositoryImpl(dataSource);
-        TicketRepositoryImpl ticketRepository = new TicketRepositoryImpl(dataSource);
-        UserRepositoryImpl userRepository = new UserRepositoryImpl(dataSource);
+        var routeRepository = new RouteRepositoryImpl(dataSource);
+        var stationRepository = new StationRepositoryImpl(dataSource);
+        var ticketRepository = new TicketRepositoryImpl(dataSource);
+        var userRepository = new UserRepositoryImpl(dataSource);
+        var sessionAnalyticsRepository = new SessionAnalyticRepositoryImpl(dataSource);
 
         routeService = new RouteService(routeRepository, stationRepository, ticketRepository);
         stationService = new StationService(stationRepository);
@@ -46,6 +42,7 @@ public final class ServiceLocator {
                 throw new RuntimeException(exception);
             }
         });
+        sessionAnalyticService = new SessionAnalyticService(sessionAnalyticsRepository);
     }
 
     private static Gson createGson() {
@@ -80,6 +77,10 @@ public final class ServiceLocator {
 
     public static UserService getUserService() {
         return userService;
+    }
+
+    public static SessionAnalyticService getSessionAnalyticService() {
+        return sessionAnalyticService;
     }
 
     public static Gson getGson() {

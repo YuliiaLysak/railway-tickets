@@ -125,4 +125,18 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>AnalyticFilter</filter-name>
+        <filter-class>filter.AnalyticFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AnalyticFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <description>Session Listener for analytical purposes</description>
+        <listener-class>listener.AnalyticSessionListener</listener-class>
+    </listener>
+
 </web-app>
