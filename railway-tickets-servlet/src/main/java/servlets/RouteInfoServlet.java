@@ -18,8 +18,6 @@ public class RouteInfoServlet extends HttpServlet {
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
 
-        request.setCharacterEncoding("UTF-8");
-
         Long routeId = ServletUtil.getPathVariable(request.getPathInfo());
         if (routeId == null) {
             response.setStatus(405);

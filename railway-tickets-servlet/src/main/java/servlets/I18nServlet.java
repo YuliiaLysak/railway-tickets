@@ -41,7 +41,6 @@ public class I18nServlet extends HttpServlet {
 
         try {
             response.setContentType("text/plain");
-            response.setCharacterEncoding("UTF-8");
             PrintWriter out = response.getWriter();
             out.print(Files.readString(Paths.get(resource.toURI())));
             out.flush();

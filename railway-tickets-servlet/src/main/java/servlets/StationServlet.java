@@ -25,7 +25,6 @@ public class StationServlet extends HttpServlet {
     protected void doGet(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
             StationService stationService = ServiceLocator.getStationService();
@@ -44,7 +43,6 @@ public class StationServlet extends HttpServlet {
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
             Station station = ServiceLocator.getGson().fromJson(request.getReader(), Station.class);
@@ -64,7 +62,6 @@ public class StationServlet extends HttpServlet {
     protected void doDelete(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
 
         Long stationId = ServletUtil.getPathVariable(request.getPathInfo());
         if (stationId == null) {
@@ -84,7 +81,6 @@ public class StationServlet extends HttpServlet {
     protected void doPut(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
 
         Long stationId = ServletUtil.getPathVariable(request.getPathInfo());
         if (stationId == null) {

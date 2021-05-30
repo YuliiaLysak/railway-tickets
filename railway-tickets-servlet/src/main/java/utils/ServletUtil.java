@@ -28,7 +28,6 @@ public final class ServletUtil {
     public static void sendSuccessResponse(HttpServletResponse response, Object content) throws IOException {
         String jsonContent = ServiceLocator.getGson().toJson(content);
         response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         out.print(jsonContent);
         out.flush();

@@ -28,7 +28,6 @@ public class RouteServlet extends HttpServlet {
     protected void doGet(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
             RouteService routeService = ServiceLocator.getRouteService();
@@ -48,7 +47,6 @@ public class RouteServlet extends HttpServlet {
     protected void doPut(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
 
         Long routeId = ServletUtil.getPathVariable(request.getPathInfo());
         if (routeId == null) {
@@ -71,7 +69,6 @@ public class RouteServlet extends HttpServlet {
     protected void doDelete(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
 
         Long routeId = ServletUtil.getPathVariable(request.getPathInfo());
         if (routeId == null) {
@@ -93,7 +90,6 @@ public class RouteServlet extends HttpServlet {
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
 
         if ("/search".equals(request.getPathInfo()) || "/search/".equals(request.getPathInfo())) {
             processSearch(request, response);
@@ -123,7 +119,6 @@ public class RouteServlet extends HttpServlet {
     private void processAdd(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
             RouteDto routeDto = ServiceLocator.getGson().fromJson(request.getReader(), RouteDto.class);

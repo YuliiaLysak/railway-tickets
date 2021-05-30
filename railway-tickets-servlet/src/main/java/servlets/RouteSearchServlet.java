@@ -26,7 +26,6 @@ public class RouteSearchServlet extends HttpServlet {
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
 
         SearchRouteRequestDto searchRouteRequestDto = ServiceLocator.getGson()
                 .fromJson(request.getReader(), SearchRouteRequestDto.class);

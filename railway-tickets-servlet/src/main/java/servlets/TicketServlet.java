@@ -22,7 +22,6 @@ public class TicketServlet extends HttpServlet {
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
             Long routeId = Long.parseLong(request.getParameter("routeId"));
