@@ -25,7 +25,10 @@ public final class ServletUtil {
         }
     }
 
-    public static void sendSuccessResponse(HttpServletResponse response, Object content) throws IOException {
+    public static void sendSuccessResponse(
+            HttpServletResponse response,
+            Object content
+    ) throws IOException {
         String jsonContent = ServiceLocator.getGson().toJson(content);
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();

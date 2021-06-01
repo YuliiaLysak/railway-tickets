@@ -6,7 +6,6 @@ import service.StationService;
 import utils.ServiceLocator;
 import utils.ServletUtil;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +25,7 @@ public class StationServlet extends HttpServlet {
     @Override
     protected void doGet(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
             String number = request.getParameter("pageNo");
@@ -49,7 +48,7 @@ public class StationServlet extends HttpServlet {
     @Override
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
             Station station = ServiceLocator.getGson().fromJson(request.getReader(), Station.class);
@@ -68,7 +67,7 @@ public class StationServlet extends HttpServlet {
     @Override
     protected void doDelete(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) {
 
         Long stationId = ServletUtil.getPathVariable(request.getPathInfo());
         if (stationId == null) {
@@ -87,7 +86,7 @@ public class StationServlet extends HttpServlet {
     @Override
     protected void doPut(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
 
         Long stationId = ServletUtil.getPathVariable(request.getPathInfo());
         if (stationId == null) {

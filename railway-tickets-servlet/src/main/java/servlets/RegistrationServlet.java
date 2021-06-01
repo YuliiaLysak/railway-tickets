@@ -10,11 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 //@WebServlet(urlPatterns = "/registration")
 public class RegistrationServlet extends HttpServlet {
-    private static final Logger LOGGER = Logger.getLogger(RegistrationServlet.class.getName());
 
     @Override
     protected void doGet(
@@ -29,7 +27,7 @@ public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
 
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");

@@ -7,11 +7,8 @@ import repository.UserRepository;
 import java.security.MessageDigest;
 import java.util.Collections;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 public class UserService {
-    //    TODO - change logger to log4j
-    private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
 
     private final UserRepository userRepository;
     private final Supplier<MessageDigest> digestFactory;

@@ -2,7 +2,6 @@ package servlets;
 
 import exceptions.BusinessLogicException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +21,7 @@ public class I18nServlet extends HttpServlet {
     @Override
     protected void doGet(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
 
         String fileName = null;
         String[] pathParts = request.getPathInfo().split("/");
@@ -36,7 +35,8 @@ public class I18nServlet extends HttpServlet {
         URL resource = I18nServlet.class.getClassLoader().getResource(fileName);
         if (resource == null) {
             LOGGER.warning("No resources file " + fileName);
-            throw new BusinessLogicException("No resources file");
+            response.setStatus(404);
+            return;
         }
 
         try {

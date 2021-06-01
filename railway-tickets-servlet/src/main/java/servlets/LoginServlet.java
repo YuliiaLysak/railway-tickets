@@ -11,11 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 //@WebServlet(urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
-    private static final Logger LOGGER = Logger.getLogger(LoginServlet.class.getName());
 
     @Override
     protected void doGet(
@@ -30,7 +28,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");

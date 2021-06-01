@@ -6,7 +6,6 @@ import service.RouteService;
 import utils.ServiceLocator;
 import utils.ServletUtil;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +24,7 @@ public class RouteSearchServlet extends HttpServlet {
     @Override
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
 
         SearchRouteRequestDto searchRouteRequestDto = ServiceLocator.getGson()
                 .fromJson(request.getReader(), SearchRouteRequestDto.class);

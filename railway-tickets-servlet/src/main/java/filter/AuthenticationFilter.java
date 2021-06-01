@@ -10,10 +10,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public class AuthenticationFilter implements Filter {
-    private static final Logger LOGGER = Logger.getLogger(AuthenticationFilter.class.getName());
 
     //    TODO - check if other pages needed to be secured with authorization
     private static final Map<String, Set<Role>> mapConfig = Map.of(
@@ -33,18 +31,7 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        LOGGER.warning("Entered AuthenticationFilter from " + request.getRequestURI());
-//        LOGGER.warning("getRequestURL = " + request.getRequestURL());
-//        LOGGER.warning("getServletPath = " + request.getServletPath());
-//        LOGGER.warning("getRequestURI = " + request.getRequestURI());
-//        LOGGER.warning("getPathInfo = " + request.getPathInfo());
-//        LOGGER.warning("getContextPath = " + request.getContextPath());
-//        LOGGER.warning("getQueryString = " + request.getQueryString());
-//        LOGGER.warning("getHttpServletMapping = " + request.getHttpServletMapping().getPattern());
-
-
         if (hasPermission(request, Set.of())) {
-            LOGGER.warning("Page is permitted for everyone");
             filterChain.doFilter(request, response);
             return;
         }
@@ -53,7 +40,6 @@ public class AuthenticationFilter implements Filter {
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 
         if (sessionUser == null) {
-            LOGGER.warning("Authentication required");
             String redirectAfterLogin = request.getRequestURI();
             session.setAttribute("redirectAfterLogin", redirectAfterLogin);
             response.sendRedirect(request.getContextPath() + "/login");
@@ -61,12 +47,10 @@ public class AuthenticationFilter implements Filter {
         }
 
         if (hasPermission(request, sessionUser.getRoles())) {
-            LOGGER.warning("Authorized role for " + sessionUser.getId());
             filterChain.doFilter(request, response);
             return;
         }
 
-        LOGGER.warning("Access denied!");
         response.setStatus(403);
         request.getServletContext()
                 .getRequestDispatcher("/WEB-INF/views/errors/403forbidden.jsp")

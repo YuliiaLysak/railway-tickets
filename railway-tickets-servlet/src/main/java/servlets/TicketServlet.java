@@ -4,12 +4,10 @@ import model.SessionUser;
 import service.TicketService;
 import utils.ServiceLocator;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 //@WebServlet(urlPatterns = "/api/tickets/*")
 public class TicketServlet extends HttpServlet {
@@ -21,7 +19,7 @@ public class TicketServlet extends HttpServlet {
     @Override
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) {
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
             Long routeId = Long.parseLong(request.getParameter("routeId"));

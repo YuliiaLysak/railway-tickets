@@ -5,7 +5,6 @@ import dto.RouteDto;
 import dto.SearchRouteRequestDto;
 import dto.SearchRouteResponseDto;
 import model.Route;
-import model.Station;
 import service.RouteService;
 import utils.ServiceLocator;
 import utils.ServletUtil;
@@ -31,7 +30,7 @@ public class RouteServlet extends HttpServlet {
     @Override
     protected void doGet(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
             String number = request.getParameter("pageNo");
@@ -54,7 +53,7 @@ public class RouteServlet extends HttpServlet {
     @Override
     protected void doPut(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
 
         Long routeId = ServletUtil.getPathVariable(request.getPathInfo());
         if (routeId == null) {
@@ -76,7 +75,7 @@ public class RouteServlet extends HttpServlet {
     @Override
     protected void doDelete(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) {
 
         Long routeId = ServletUtil.getPathVariable(request.getPathInfo());
         if (routeId == null) {
@@ -97,7 +96,7 @@ public class RouteServlet extends HttpServlet {
     @Override
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
 
         if ("/search".equals(request.getPathInfo()) || "/search/".equals(request.getPathInfo())) {
             processSearch(request, response);
@@ -112,7 +111,7 @@ public class RouteServlet extends HttpServlet {
     // @PostMapping("/search")
     private void processSearch(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
         SearchRouteRequestDto searchRouteRequestDto = ServiceLocator.getGson().fromJson(request.getReader(), SearchRouteRequestDto.class);
         RouteService routeService = ServiceLocator.getRouteService();
         List<SearchRouteResponseDto> availableRoutes = routeService.getAvailableRoutes(searchRouteRequestDto);
@@ -126,7 +125,7 @@ public class RouteServlet extends HttpServlet {
     // @PostMapping
     private void processAdd(
             HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
             RouteDto routeDto = ServiceLocator.getGson().fromJson(request.getReader(), RouteDto.class);
@@ -138,5 +137,4 @@ public class RouteServlet extends HttpServlet {
             response.setStatus(405);
         }
     }
-
 }
