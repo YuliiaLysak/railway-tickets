@@ -1,5 +1,6 @@
 package servlets;
 
+import dto.PageableResponse;
 import model.Station;
 import service.StationService;
 import utils.ServiceLocator;
@@ -10,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Logger;
 
 //@WebServlet(urlPatterns = "/api/stations/*")
@@ -21,14 +21,21 @@ public class StationServlet extends HttpServlet {
      * Returns all stations as JSON.
      */
     // @GetMapping
+    // @RequestParam(required = false, defaultValue = "1") int pageNo,
+    // @RequestParam(required = false, defaultValue = "10") int pageSize
     @Override
     protected void doGet(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
+            String number = request.getParameter("pageNo");
+            String size = request.getParameter("pageSize");
+            int pageNo = number != null ? Integer.parseInt(number) : 1;
+            int pageSize = size != null ? Integer.parseInt(size) : 10;
+
             StationService stationService = ServiceLocator.getStationService();
-            List<Station> stations = stationService.getAllStations();
+            PageableResponse<Station> stations = stationService.getAllStationsPaginated(pageNo, pageSize);
             ServletUtil.sendSuccessResponse(response, stations);
         } else {
             response.setStatus(405);

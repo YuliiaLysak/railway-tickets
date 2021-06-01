@@ -133,6 +133,45 @@ public class StationRepositoryImpl implements StationRepository {
         return stations;
     }
 
+    @Override
+    public List<Station> findAllPaginated(int pageNo, int pageSize) {
+        int offset = pageNo * pageSize;
+        String query = "SELECT id, city, name FROM stations LIMIT ? OFFSET ?";
+        List<Station> stations = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ) {
+            int parameterIndex = 0;
+            preparedStatement.setInt(++parameterIndex, pageSize);
+            preparedStatement.setInt(++parameterIndex, offset);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Station station = toStation(resultSet);
+                    stations.add(station);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.severe(e.getMessage());
+        }
+        return stations;
+    }
+
+    @Override
+    public int countStationRecords() {
+        String query = "SELECT COUNT(*) from stations";
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)
+        ) {
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     private Station toStation(ResultSet resultSet) throws SQLException {
         Station station = new Station();
         station.setId(resultSet.getLong("id"));

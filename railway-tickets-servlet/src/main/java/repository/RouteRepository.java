@@ -24,4 +24,8 @@ public interface RouteRepository {
     Optional<Route> findById(Long routeId);
 
     void update(Route updatedRoute);
+
+    List<Route> findAllPaginated(int pageNo, int pageSize);
+
+    int countRouteRecords();
 }

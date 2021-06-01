@@ -59,6 +59,64 @@ public class RouteRepositoryImpl implements RouteRepository {
     }
 
     @Override
+    public List<Route> findAllPaginated(int pageNo, int pageSize) {
+        int offset = pageNo * pageSize;
+        String query = "SELECT r.id route_id,"
+                + "            r.departure_time AS route_departure_time,"
+                + "            r.arrival_time AS route_arrival_time,"
+                + "            r.train_name AS route_train_name,"
+                + "            r.total_seats AS route_total_seats,"
+                + "            r.price_per_seat AS route_price_per_seat,"
+                + "            d_s.id AS d_station_id,"
+                + "            d_s.city AS d_station_city,"
+                + "            d_s.name AS d_station_name,"
+                + "            a_s.id AS a_station_id,"
+                + "            a_s.city AS a_station_city,"
+                + "            a_s.name AS a_station_name"
+                + "     FROM routes AS r"
+                + "         INNER JOIN stations AS d_s"
+                + "            ON r.departure_station_id = d_s.id"
+                + "         INNER JOIN stations AS a_s"
+                + "            ON r.arrival_station_id = a_s.id"
+                + "     LIMIT ? OFFSET ?";
+        List<Route> routes = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)
+        ) {
+            int parameterIndex = 0;
+            preparedStatement.setInt(++parameterIndex, pageSize);
+            preparedStatement.setInt(++parameterIndex, offset);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Station departureStation = toDepartureStation(resultSet);
+                    Station arrivalStation = toArrivalStation(resultSet);
+                    Route route = toRoute(resultSet, departureStation, arrivalStation);
+                    routes.add(route);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.severe(e.getMessage());
+        }
+        return routes;
+    }
+
+    @Override
+    public int countRouteRecords() {
+        String query = "SELECT COUNT(*) from routes";
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)
+        ) {
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
     public Route save(Route route) {
         String query = "INSERT INTO routes ("
                 + "                 departure_station_id, "

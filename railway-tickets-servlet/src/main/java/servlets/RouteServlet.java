@@ -1,9 +1,11 @@
 package servlets;
 
+import dto.PageableResponse;
 import dto.RouteDto;
 import dto.SearchRouteRequestDto;
 import dto.SearchRouteResponseDto;
 import model.Route;
+import model.Station;
 import service.RouteService;
 import utils.ServiceLocator;
 import utils.ServletUtil;
@@ -24,15 +26,21 @@ public class RouteServlet extends HttpServlet {
      * Returns all routes as JSON.
      */
     // @GetMapping
+    // @RequestParam(required = false, defaultValue = "1") int pageNo,
+    // @RequestParam(required = false, defaultValue = "5") int pageSize
     @Override
     protected void doGet(
             HttpServletRequest request, HttpServletResponse response
     ) throws ServletException, IOException {
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
-            RouteService routeService = ServiceLocator.getRouteService();
-            List<Route> routes = routeService.getAllRoutes();
+            String number = request.getParameter("pageNo");
+            String size = request.getParameter("pageSize");
+            int pageNo = number != null ? Integer.parseInt(number) : 1;
+            int pageSize = size != null ? Integer.parseInt(size) : 5;
 
+            RouteService routeService = ServiceLocator.getRouteService();
+            PageableResponse<Route> routes = routeService.getAllRoutesPaginated(pageNo, pageSize);
             ServletUtil.sendSuccessResponse(response, routes);
         } else {
             response.setStatus(405);

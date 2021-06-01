@@ -1,6 +1,7 @@
 package service;
 
 
+import dto.PageableResponse;
 import dto.RouteDto;
 import dto.SearchRouteRequestDto;
 import dto.SearchRouteResponseDto;
@@ -36,6 +37,18 @@ public class RouteService {
 
     public List<Route> getAllRoutes() {
         return routeRepository.findAll();
+    }
+
+    // TODO - add tests for this method
+    public PageableResponse<Route> getAllRoutesPaginated(int pageNo, int pageSize) {
+        List<Route> routes = routeRepository.findAllPaginated(pageNo - 1, pageSize);
+        int routeCount = routeRepository.countRouteRecords();
+        int totalPages = (int) Math.ceil((double) routeCount / pageSize);
+        return new PageableResponse<>(
+                Math.max(Math.min(pageNo, totalPages), 1),
+                totalPages,
+                routes
+        );
     }
 
     public Route addNewRoute(RouteDto routeDto) {

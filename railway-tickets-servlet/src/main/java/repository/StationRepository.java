@@ -18,4 +18,8 @@ public interface StationRepository {
     Station findByCityAndName(String city, String name);
 
     void updateStationById(Long id, String city, String name);
+
+    List<Station> findAllPaginated(int pageNo, int pageSize);
+
+    int countStationRecords();
 }

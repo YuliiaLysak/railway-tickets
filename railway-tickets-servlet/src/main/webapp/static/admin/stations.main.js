@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    refreshStationData();
+    refreshStationData(1, null);
 
     updateStation();
     deleteStation();
@@ -8,16 +8,16 @@ $(document).ready(function () {
     addListenerToHideErrorMessage();
 });
 
-function refreshStationData(selectedStationId) {
+function refreshStationData(pageNo, selectedStationId) {
     $.ajax({
         type: 'GET',
-        url: '/api/stations',
+        url: `/api/stations?pageNo=${pageNo}`,
         contentType: 'application/json'
     })
-        .then(stations => renderStations(stations, selectedStationId))
+        .then(pageableStations => renderStations(pageableStations, selectedStationId))
         .then(renderedStations => $('.stations-list')[0].innerHTML = renderedStations)
 
-        // method for handling selection of station
+        // method for handling selection of station and page
         .then(() => {
             $('.list-group-item-action').click(function (event) {
                 event.preventDefault();
@@ -34,6 +34,16 @@ function refreshStationData(selectedStationId) {
                 $stationCity[0].value = $selectedItem.data('station-city');
                 $stationName[0].value = $selectedItem.data('station-name');
             });
+            $('.page-item').click(function (event) {
+                event.preventDefault();
+                $('.page-item').click(function () {
+                    $(this).removeClass('active');
+                });
+                let $selectedItem = $(event.target);
+                let pageNo = $selectedItem.data('page-no');
+
+                refreshStationData(pageNo, null);
+            })
         });
 }
 
@@ -52,13 +62,13 @@ function updateStation() {
         }
         $.ajax({
             type: 'PUT',
-            url: '/api/stations/' + stationId,
+            url: `/api/stations/${stationId}`,
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(payload)
         })
             .always(function () {
-                refreshStationData(+stationId);
+                refreshStationData(getTotalPages(), +stationId);
             })
             .fail(function (xhr, status, error) {
                 let $error = $('.error-message');
@@ -77,10 +87,10 @@ function deleteStation() {
         }
         $.ajax({
             type: 'DELETE',
-            url: '/api/stations/' + stationId,
+            url: `/api/stations/${stationId}`,
             contentType: 'application/json'
         })
-            .always(() => refreshStationData(+stationId))
+            .always(() => refreshStationData(1, +stationId))
             .fail(function (xhr, status, error) {
                 let $error = $('.error-message');
                 $error.removeClass('invisible');
@@ -123,7 +133,7 @@ function addStation() {
             dataType: 'json',
             data: JSON.stringify(payload)
         })
-            .then(response => refreshStationData(response.id))
+            .then(response => refreshStationData(getTotalPages(), response.id))
             .fail(function (xhr, status, error) {
                 let $error = $('.error-message');
                 $error.removeClass('invisible');
@@ -132,16 +142,18 @@ function addStation() {
     });
 }
 
-function renderStations(stations, selectedStationId) {
-    if (stations.length === 0) {
+function renderStations(pageableStations, selectedStationId) {
+    if (pageableStations.totalPages === 0) {
         return `<p class="fs-4 text-danger" style="text-align: center;">${i18n('noStations')}</p>`;
     }
-    return stations.map(station => renderStationLine(station, selectedStationId))
+    let stationList = pageableStations.content
+        .map(station => renderStationLine(station, selectedStationId))
         .reduce((a, b) => a + b, '');
+    let pageBar = renderPageBar(pageableStations.currentPage, pageableStations.totalPages);
+    return stationList + pageBar;
 }
 
 function renderStationLine(station, selectedStationId) {
-    console.log(`#renderStationLine(${station.id}, ${selectedStationId})`);
     let classes = 'list-group-item list-group-item-action';
     if (selectedStationId === station.id) {
         classes += ' active';
@@ -152,4 +164,27 @@ function renderStationLine(station, selectedStationId) {
                         data-station-name="${station.name}">
                 ${station.city} (${station.name})
             </a>`;
+}
+
+function renderPageBar(currentPage, totalPages) {
+    let pageBar = '<ul class="pagination justify-content-center" style="margin:20px 0">';
+    pageBar += renderPageNumber(Math.max(currentPage - 1, 1), totalPages, '&laquo;', '');
+    for (let i = 1; i <= totalPages; i++) {
+        let activeClass = (i === currentPage) ? 'active' : '';
+        pageBar += renderPageNumber(i, totalPages, i, activeClass);
+    }
+    pageBar += renderPageNumber(Math.min(currentPage + 1, totalPages), totalPages, '&raquo;', '');
+    pageBar += '</ul>';
+    return pageBar;
+}
+
+function renderPageNumber(pageNo, totalPages, text, activeClass) {
+    return `<li class="page-item ${activeClass}">
+                <a class="page-link" data-page-no="${pageNo}" data-page-total="${totalPages}">${text}</a>
+            </li>`;
+}
+
+function getTotalPages() {
+    let $pageElement = $('.page-item.active > .page-link')[0];
+    return $($pageElement).data('page-total') || 1;
 }

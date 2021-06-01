@@ -1,5 +1,6 @@
 package service;
 
+import dto.PageableResponse;
 import exceptions.BusinessLogicException;
 import exceptions.InputValidationException;
 import model.Station;
@@ -42,5 +43,17 @@ public class StationService {
         if (station.getName() == null || station.getName().isEmpty()) {
             throw new InputValidationException("exception.stationName.empty");
         }
+    }
+
+    // TODO - add tests for this method
+    public PageableResponse<Station> getAllStationsPaginated(int pageNo, int pageSize) {
+        List<Station> stations = stationRepository.findAllPaginated(pageNo - 1, pageSize);
+        int stationCount = stationRepository.countStationRecords();
+        int totalPages = (int) Math.ceil((double) stationCount / pageSize);
+        return new PageableResponse<>(
+                Math.max(Math.min(pageNo, totalPages), 1),
+                totalPages,
+                stations
+        );
     }
 }
