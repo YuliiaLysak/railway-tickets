@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>9e2ad3dd-49ab-425d-af02-4c77c5e593b7.DATABASE:railwaytickets</OriginalElement>
+  <nodes>
+    <node x="737.123949579832" y="315.6596638655463">9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.tickets</node>
+    <node x="749.123949579832" y="91.41596638655464">9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.users_roles</node>
+    <node x="211.09243697478993" y="339.1596638655463">9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.session_analytic</node>
+    <node x="1136.9453781512607" y="354.1029411764706">9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.routes</node>
+    <node x="381.26657329598504" y="91.41596638655464">9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.users</node>
+    <node x="1112.7247899159665" y="73.45378151260503">9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.stations</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.tickets" target="9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.routes" relationship="REFERENCES">
+      <point x="50.25" y="-60.5" />
+      <point x="887.873949579832" y="398.2205882352942" />
+      <point x="1191.2521008403362" y="398.2205882352942" />
+      <point x="1191.2521008403362" y="564.1029411764706" />
+      <point x="0.0" y="105.0" />
+    </edge>
+    <edge source="9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.routes" target="9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.stations" relationship="REFERENCES">
+      <point x="-75.25" y="-104.99999999999994" />
+      <point x="1182.1953781512607" y="257.77836134453787" />
+      <point x="1353.7247899159665" y="257.77836134453787" />
+      <point x="1353.7247899159665" y="116.0" />
+      <point x="1174.7247899159665" y="116.0" />
+      <point x="-15.0" y="50.0" />
+    </edge>
+    <edge source="9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.users_roles" target="9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.users" relationship="REFERENCES">
+      <point x="0.0" y="-38.5" />
+      <point x="824.123949579832" y="138.15126050420167" />
+      <point x="476.26657329598504" y="138.15126050420167" />
+      <point x="0.0" y="83.0" />
+    </edge>
+    <edge source="9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.session_analytic" target="9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.users" relationship="REFERENCES">
+      <point x="136.50000000000003" y="0.0" />
+      <point x="424.26657329598504" y="433.1596638655463" />
+      <point x="424.26657329598504" y="257.41596638655466" />
+      <point x="-15.0" y="83.0" />
+    </edge>
+    <edge source="9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.tickets" target="9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.users" relationship="REFERENCES">
+      <point x="-50.25" y="-60.5" />
+      <point x="787.373949579832" y="355.15966386554624" />
+      <point x="522.266573295985" y="355.15966386554624" />
+      <point x="522.266573295985" y="257.41596638655466" />
+      <point x="0.0" y="83.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="false" x="794.5" y="339.5" />
+  <SelectedNodes>
+    <node>9e2ad3dd-49ab-425d-af02-4c77c5e593b7.TABLE:railwaytickets.public.users</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Key columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+

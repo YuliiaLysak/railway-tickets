@@ -3,11 +3,13 @@
 ### Project for searching and purchasing railway tickets:
 
 
-### [with Spring](https://github.com/YuliiaLysak/railway-tickets/tree/main/railway-tickets-spring/README.md)
+### [with Spring](https://github.com/YuliiaLysak/railway-tickets/tree/main/railway-tickets-spring)
 
 
-### [with Java EE (Servlet)](https://github.com/YuliiaLysak/railway-tickets/tree/main/railway-tickets-servlet/README.md)
+### [with Java EE (Servlet)](https://github.com/YuliiaLysak/railway-tickets/tree/main/railway-tickets-servlet)
 
+### Database UML diagram
+![Database UML diagram](https://github.com/YuliiaLysak/railway-tickets/DATABASE:railwaytickets.png)
 
 
 ### Опис проекту:
