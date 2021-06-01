@@ -1,6 +1,8 @@
 # Railway tickets (Java EE Servlet)
 
 ### Для запуску програми необхідно:
+- використовувати Java version 14
+
 - запустити PostgreSQL сервер, наприклад використовуючи Docker
   ```
   docker run --name local-postgres -e POSTGRES_PASSWORD=root -p 5432:5432 -d postgres
