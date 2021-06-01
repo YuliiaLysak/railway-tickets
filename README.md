@@ -9,7 +9,7 @@
 ### [with Java EE (Servlet)](https://github.com/YuliiaLysak/railway-tickets/tree/main/railway-tickets-servlet)
 
 ### Database UML diagram
-![Database UML diagram](https://github.com/YuliiaLysak/railway-tickets/DATABASE:railwaytickets.png)
+![Database UML diagram](https://github.com/YuliiaLysak/railway-tickets/blob/main/DATABASE:railwaytickets.png?raw=true)
 
 
 ### Опис проекту:
