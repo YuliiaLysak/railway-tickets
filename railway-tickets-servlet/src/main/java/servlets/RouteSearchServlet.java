@@ -11,19 +11,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 
-//@WebServlet(urlPatterns = "/api/routes/search")
+/**
+ * Used to provide API for searching available routes by urlPattern "/api/routes/search/*"
+ *
+ * @author Yuliia Lysak
+ */
 public class RouteSearchServlet extends HttpServlet {
-    private static final Logger LOGGER = Logger.getLogger(RouteSearchServlet.class.getName());
 
     /**
-     * Search available routes ("/search").
+     * Gets list of available routes.
+     * Accepts request body as application/json.
      */
-    // @PostMapping("/search")
     @Override
     protected void doPost(
-            HttpServletRequest request, HttpServletResponse response
+            HttpServletRequest request,
+            HttpServletResponse response
     ) throws IOException {
 
         SearchRouteRequestDto searchRouteRequestDto = ServiceLocator.getGson()

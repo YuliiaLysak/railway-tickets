@@ -9,27 +9,28 @@ import service.RouteService;
 import utils.ServiceLocator;
 import utils.ServletUtil;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 
-//@WebServlet(urlPatterns = "/api/routes/*")
+/**
+ * Used to provide API for searching routes by urlPattern "/api/routes/*"
+ *
+ * @author Yuliia Lysak
+ */
 public class RouteServlet extends HttpServlet {
-    private static final Logger LOGGER = Logger.getLogger(StationServlet.class.getName());
 
     /**
-     * Returns all routes as JSON.
+     * Returns paginated routes as JSON.
+     * Accepts query parameters: pageNo, pageSize.
+     * Sends response status code 405 if path info is invalid.
      */
-    // @GetMapping
-    // @RequestParam(required = false, defaultValue = "1") int pageNo,
-    // @RequestParam(required = false, defaultValue = "5") int pageSize
     @Override
     protected void doGet(
-            HttpServletRequest request, HttpServletResponse response
+            HttpServletRequest request,
+            HttpServletResponse response
     ) throws IOException {
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
@@ -47,9 +48,11 @@ public class RouteServlet extends HttpServlet {
     }
 
     /**
-     * Update route in database.
+     * Updates route information.
+     * Accepts path variable: routeId
+     * Accepts request body as application/json.
+     * Sends response status code 405 if path variable is invalid or not found.
      */
-    // @PutMapping("/{routeId}")
     @Override
     protected void doPut(
             HttpServletRequest request, HttpServletResponse response
@@ -69,9 +72,10 @@ public class RouteServlet extends HttpServlet {
     }
 
     /**
-     * Delete route from database.
+     * Deletes route.
+     * Accepts path variable: routeId
+     * Sends response status code 405 if path variable is invalid or not found.
      */
-    // @DeleteMapping("/{routeId}")
     @Override
     protected void doDelete(
             HttpServletRequest request, HttpServletResponse response
@@ -88,14 +92,13 @@ public class RouteServlet extends HttpServlet {
     }
 
     /**
-     * Add route to database ("").
-     * Search available routes ("/search").
+     * Process searching for pathInfo "/search".
+     * Process adding if pathInfo not present.
      */
-    // @PostMapping
-    // @PostMapping("/search")
     @Override
     protected void doPost(
-            HttpServletRequest request, HttpServletResponse response
+            HttpServletRequest request,
+            HttpServletResponse response
     ) throws IOException {
 
         if ("/search".equals(request.getPathInfo()) || "/search/".equals(request.getPathInfo())) {
@@ -106,13 +109,15 @@ public class RouteServlet extends HttpServlet {
     }
 
     /**
-     * Search available routes ("/search").
+     * Returns available routes for pathInfo "/search".
+     * Accepts request body as application/json.
      */
-    // @PostMapping("/search")
     private void processSearch(
-            HttpServletRequest request, HttpServletResponse response
+            HttpServletRequest request,
+            HttpServletResponse response
     ) throws IOException {
-        SearchRouteRequestDto searchRouteRequestDto = ServiceLocator.getGson().fromJson(request.getReader(), SearchRouteRequestDto.class);
+        SearchRouteRequestDto searchRouteRequestDto = ServiceLocator.getGson()
+                .fromJson(request.getReader(), SearchRouteRequestDto.class);
         RouteService routeService = ServiceLocator.getRouteService();
         List<SearchRouteResponseDto> availableRoutes = routeService.getAvailableRoutes(searchRouteRequestDto);
 
@@ -120,9 +125,10 @@ public class RouteServlet extends HttpServlet {
     }
 
     /**
-     * Add route to database ("").
+     * Add new route.
+     * Accepts request body as application/json.
+     * Sends response status code 405 if pathInfo is invalid.
      */
-    // @PostMapping
     private void processAdd(
             HttpServletRequest request, HttpServletResponse response
     ) throws IOException {

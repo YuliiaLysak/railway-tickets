@@ -16,6 +16,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Filter for providing exception handling
+ *
+ * @author Yuliia Lysak
+ */
 public class ExceptionFilter implements Filter {
     // TODO - change logger to log4j
     private static final Logger LOGGER = Logger.getLogger(ExceptionFilter.class.getName());
@@ -48,6 +53,14 @@ public class ExceptionFilter implements Filter {
         }
     }
 
+    /**
+     * Gets localized error message
+     *
+     * @param messageKey - key for getting localized error message
+     * @param locale - desirable locale
+     *
+     * @return localized error message or empty String if error message not present
+     */
     private String getMessageForLocale(String messageKey, Locale locale) {
         LOGGER.warning("Handling localized exception with message '" + messageKey + "'");
         if (messageKey == null) {

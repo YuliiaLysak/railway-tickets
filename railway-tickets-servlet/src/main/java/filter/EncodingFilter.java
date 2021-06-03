@@ -3,6 +3,11 @@ package filter;
 import javax.servlet.*;
 import java.io.IOException;
 
+/**
+ * Filter for providing request and response encoding in UTF-8
+ *
+ * @author Yuliia Lysak
+ */
 public class EncodingFilter implements Filter {
     private static final String ENCODING = "UTF-8";
 

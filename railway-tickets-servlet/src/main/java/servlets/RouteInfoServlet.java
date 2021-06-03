@@ -11,11 +11,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//@WebServlet(urlPatterns = "/routes/*")
+/**
+ * Used to get information about specific route by urlPattern "/routes/*"
+ *
+ * @author Yuliia Lysak
+ */
 public class RouteInfoServlet extends HttpServlet {
+
+    /**
+     * Returns page with information about specific route.
+     * Sends response status code 405 if path variable 'routeId' not present
+     */
     @Override
     protected void doGet(
-            HttpServletRequest request, HttpServletResponse response
+            HttpServletRequest request,
+            HttpServletResponse response
     ) throws ServletException, IOException {
 
         Long routeId = ServletUtil.getPathVariable(request.getPathInfo());

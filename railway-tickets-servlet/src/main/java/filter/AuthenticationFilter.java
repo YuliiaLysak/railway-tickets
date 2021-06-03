@@ -1,6 +1,9 @@
 package filter;
 
+import exceptions.BusinessLogicException;
+import listener.AnalyticSessionListener;
 import model.Role;
+import model.SessionAnalytic;
 import model.SessionUser;
 
 import javax.servlet.*;
@@ -11,9 +14,14 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Filter for providing security of the application
+ *
+ * @author Yuliia Lysak
+ */
 public class AuthenticationFilter implements Filter {
 
-    //    TODO - check if other pages needed to be secured with authorization
+    //    TODO - double check if other pages needed to be secured with authorization
     private static final Map<String, Set<Role>> mapConfig = Map.of(
             "/api/tickets", Set.of(Role.USER),
             "/admin/*", Set.of(Role.ADMIN),
@@ -57,6 +65,14 @@ public class AuthenticationFilter implements Filter {
                 .forward(request, response);
     }
 
+    /**
+     * Checks if user has permission to see requested page
+     *
+     * @param request - the request from the client side
+     * @param roles - set of user roles
+     *
+     * @return true if user has permission to see requested page otherwise false
+     */
     private boolean hasPermission(HttpServletRequest request, Set<Role> roles) {
         String url = request.getHttpServletMapping().getPattern();
         Set<Role> requiredRoles = getRequiredRoles(url);

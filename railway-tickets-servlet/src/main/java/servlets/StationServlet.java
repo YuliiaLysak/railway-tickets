@@ -10,21 +10,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Logger;
 
-//@WebServlet(urlPatterns = "/api/stations/*")
+/**
+ * Used to provide API for searching stations by urlPattern "/api/stations/*"
+ *
+ * @author Yuliia Lysak
+ */
 public class StationServlet extends HttpServlet {
-    private static final Logger LOGGER = Logger.getLogger(StationServlet.class.getName());
 
     /**
-     * Returns all stations as JSON.
+     * Returns paginated stations as JSON.
+     * Accepts query parameters: pageNo, pageSize.
+     * Sends response status code 405 if path info is invalid.
      */
-    // @GetMapping
-    // @RequestParam(required = false, defaultValue = "1") int pageNo,
-    // @RequestParam(required = false, defaultValue = "10") int pageSize
     @Override
     protected void doGet(
-            HttpServletRequest request, HttpServletResponse response
+            HttpServletRequest request,
+            HttpServletResponse response
     ) throws IOException {
 
         if ("/".equals(request.getPathInfo()) || request.getPathInfo() == null) {
@@ -42,9 +44,10 @@ public class StationServlet extends HttpServlet {
     }
 
     /**
-     * Add station to database.
+     * Add new station.
+     * Accepts request body as application/json.
+     * Sends response status code 405 if pathInfo is invalid.
      */
-    // @PostMapping
     @Override
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response
@@ -61,14 +64,15 @@ public class StationServlet extends HttpServlet {
     }
 
     /**
-     * Delete station from database.
+     * Deletes station.
+     * Accepts path variable: stationId
+     * Sends response status code 405 if path variable is invalid or not found.
      */
-    // @DeleteMapping("/{stationId}")
     @Override
     protected void doDelete(
-            HttpServletRequest request, HttpServletResponse response
+            HttpServletRequest request,
+            HttpServletResponse response
     ) {
-
         Long stationId = ServletUtil.getPathVariable(request.getPathInfo());
         if (stationId == null) {
             response.setStatus(405);
@@ -80,9 +84,11 @@ public class StationServlet extends HttpServlet {
     }
 
     /**
-     * Update station in database.
+     * Updates station information.
+     * Accepts path variable: stationId
+     * Accepts request body as application/json.
+     * Sends response status code 405 if path variable is invalid or not found.
      */
-    // @PutMapping("/{stationId}")
     @Override
     protected void doPut(
             HttpServletRequest request, HttpServletResponse response

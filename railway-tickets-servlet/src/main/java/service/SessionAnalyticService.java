@@ -3,6 +3,11 @@ package service;
 import model.SessionAnalytic;
 import repository.SessionAnalyticRepository;
 
+/**
+ * Used for processing operations with session analytic
+ *
+ * @author Yuliia Lysak
+ */
 public class SessionAnalyticService {
     private final SessionAnalyticRepository sessionAnalyticsRepository;
 

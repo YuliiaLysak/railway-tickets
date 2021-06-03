@@ -9,13 +9,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-//@WebServlet(urlPatterns = "/api/tickets/*")
+/**
+ * Used to provide API for buying a ticket by urlPattern "/api/tickets/*"
+ *
+ * @author Yuliia Lysak
+ */
 public class TicketServlet extends HttpServlet {
 
     /**
      * Process buying a ticket.
+     * Accept roueId as path variable.
+     * Sends response status code 405 if pathInfo is invalid
      */
-    // @PostMapping
     @Override
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response

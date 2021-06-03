@@ -1,5 +1,6 @@
 package service;
 
+import exceptions.BusinessLogicException;
 import model.Role;
 import model.User;
 import repository.UserRepository;
@@ -8,6 +9,11 @@ import java.security.MessageDigest;
 import java.util.Collections;
 import java.util.function.Supplier;
 
+/**
+ * Used for processing operations with user
+ *
+ * @author Yuliia Lysak
+ */
 public class UserService {
 
     private final UserRepository userRepository;
@@ -18,10 +24,18 @@ public class UserService {
         this.digestFactory = digestFactory;
     }
 
+    /**
+     * Add new user.
+     *
+     * @param user - user object for saving.
+     * @return true if user was successfully added.
+     *
+     * @throws BusinessLogicException if user was not added
+     */
     public boolean addUser(User user) {
         User userFromDb = userRepository.findByEmail(user.getEmail());
         if (userFromDb != null) {
-            return false;
+            throw new BusinessLogicException("User with this email already exists");
         }
         user.setRoles(Collections.singleton(Role.USER));
         user.setPassword(encode(user.getPassword()));
@@ -29,10 +43,24 @@ public class UserService {
         return true;
     }
 
+    /**
+     * Gets user
+     *
+     * @param email - email of user
+     * @param password - password of user
+     *
+     * @return User object
+     */
     public User findByEmailAndPassword(String email, String password) {
         return userRepository.findByEmailAndPassword(email, encode(password));
     }
 
+    /**
+     * Provides password encoding.
+     *
+     * @param password - a password to encode.
+     * @return encoded password.
+     */
     private String encode(String password) {
         var result = new StringBuilder();
         MessageDigest digest = digestFactory.get();

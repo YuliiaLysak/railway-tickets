@@ -12,6 +12,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Used to get service instances that implement business logic of the application
+ *
+ * @author Yuliia Lysak
+ */
 public final class ServiceLocator {
 
     private static final RouteService routeService;
@@ -45,6 +50,12 @@ public final class ServiceLocator {
         sessionAnalyticService = new SessionAnalyticService(sessionAnalyticsRepository);
     }
 
+    /**
+     * Creates Gson object with serialization/deserialization functionality
+     * for LocalDateTime and LocalDate
+     *
+     * @return Gson object
+     */
     private static Gson createGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, type, context) ->

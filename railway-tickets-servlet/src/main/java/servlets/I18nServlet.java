@@ -14,24 +14,36 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-//@WebServlet(urlPatterns = "/i18n/*")
+/**
+ * Used to provide i18n by locale for JavaScript files using urlPattern "/i18n/*"
+ *
+ * @author Yuliia Lysak
+ */
 public class I18nServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(I18nServlet.class.getName());
 
+    /**
+     * Returns content of resource bundle file as text/plain.
+     * Sends response status code 404 if file name not present or resource file was not found
+     */
     @Override
     protected void doGet(
-            HttpServletRequest request, HttpServletResponse response
+            HttpServletRequest request,
+            HttpServletResponse response
     ) throws IOException {
 
-        String fileName = null;
         String[] pathParts = request.getPathInfo().split("/");
         long variablesCount = Arrays.stream(pathParts)
                 .filter(variable -> !variable.isEmpty())
                 .count();
-        if (variablesCount == 1) {
-            fileName = pathParts[1];
+
+        String fileName = variablesCount == 1 ? pathParts[1] : null;
+        if (fileName == null) {
+            LOGGER.warning("File name not present");
+            response.setStatus(404);
+            return;
         }
-        LOGGER.warning(fileName);
+
         URL resource = I18nServlet.class.getClassLoader().getResource(fileName);
         if (resource == null) {
             LOGGER.warning("No resources file " + fileName);

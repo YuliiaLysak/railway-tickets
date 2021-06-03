@@ -6,6 +6,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Filter for providing i18n by requested locale locale
+ *
+ * @author Yuliia Lysak
+ */
 public class I18nFilter implements Filter {
 
     @Override

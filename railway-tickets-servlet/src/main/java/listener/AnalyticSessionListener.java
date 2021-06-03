@@ -1,5 +1,6 @@
 package listener;
 
+import filter.AnalyticFilter;
 import model.SessionAnalytic;
 import model.SessionUser;
 import service.SessionAnalyticService;
@@ -10,8 +11,13 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 /**
- * Listener for analytical purposes: e.g suggesting user to buy ticket after search result,
+ * Session listener for analytical purposes: e.g suggesting user to buy ticket after search result,
  * getting conversion rate buying ticket
+ *
+ * @author Yuliia Lysak
+ *
+ * @see AnalyticFilter
+ * @see SessionAnalytic
  */
 public class AnalyticSessionListener implements HttpSessionListener {
 

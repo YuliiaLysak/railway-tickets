@@ -1,13 +1,24 @@
 package servlets;
 
+import model.Role;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//@WebServlet(urlPatterns = "/admin/*")
+/**
+ * Used to return stations and routes pages for Role.Admin via urlPattern "/admin/*"
+ *
+ * @author Yuliia Lysak
+ * @see Role
+ */
 public class AdminServlet extends HttpServlet {
+
+    /**
+     * Returns stations or routes pages
+     */
     @Override
     protected void doGet(
             HttpServletRequest request, HttpServletResponse response

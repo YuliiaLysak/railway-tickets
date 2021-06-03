@@ -1,6 +1,5 @@
 package servlets;
 
-import exceptions.BusinessLogicException;
 import model.User;
 import service.UserService;
 import utils.ServiceLocator;
@@ -11,12 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//@WebServlet(urlPatterns = "/registration")
+/**
+ * Used to process registration of users to the application by urlPattern "/registration"
+ *
+ * @author Yuliia Lysak
+ */
 public class RegistrationServlet extends HttpServlet {
 
+    /**
+     * Returns registration page
+     */
     @Override
     protected void doGet(
-            HttpServletRequest request, HttpServletResponse response
+            HttpServletRequest request,
+            HttpServletResponse response
     ) throws ServletException, IOException {
 
         request.getServletContext()
@@ -24,28 +31,26 @@ public class RegistrationServlet extends HttpServlet {
                 .forward(request, response);
     }
 
+    /**
+     * Process user registration request.
+     * Accept form parameters as application/x-www-form-urlencoded:
+     * firstName, lastName, email, phone, password.
+     */
     @Override
     protected void doPost(
-            HttpServletRequest request, HttpServletResponse response
+            HttpServletRequest request,
+            HttpServletResponse response
     ) throws IOException {
 
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-        String password = request.getParameter("password");
+        User user = new User();
+        user.setFirstName(request.getParameter("firstName"));
+        user.setLastName(request.getParameter("lastName"));
+        user.setEmail(request.getParameter("email"));
+        user.setPhone(request.getParameter("phone"));
+        user.setPassword(request.getParameter("password"));
 
         UserService userService = ServiceLocator.getUserService();
-        User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
-        user.setPhone(phone);
-        user.setPassword(password);
-
-        if (!userService.addUser(user)) {
-            throw new BusinessLogicException("User with this email already exists");
-        }
+        userService.addUser(user);
 
         response.sendRedirect(request.getContextPath() + "/login");
     }

@@ -1,5 +1,6 @@
 package filter;
 
+import listener.AnalyticSessionListener;
 import model.SessionAnalytic;
 
 import javax.servlet.*;
@@ -11,6 +12,15 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.TimeZone;
 
+/**
+ * Filter for analytical purposes: e.g suggesting user to buy ticket after search result,
+ * getting conversion rate buying ticket
+ *
+ * @author Yuliia Lysak
+ *
+ * @see AnalyticSessionListener
+ * @see SessionAnalytic
+ */
 public class AnalyticFilter implements Filter {
 
     @Override

@@ -5,8 +5,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
+/**
+ * Utility class for servlets
+ *
+ * @author Yuliia Lysak
+ */
 public final class ServletUtil {
 
+    /**
+     * Gets path variable from url-pattern if present
+     *
+     * @param path a pathInfo String
+     * @return path variable Long or null
+     */
     public static Long getPathVariable(String path) {
         if (path == null) {
             return null;
@@ -25,6 +36,12 @@ public final class ServletUtil {
         }
     }
 
+    /**
+     * Converts object to Json and write it to output channel of response
+     *
+     * @param response - the response which will be sent from the server side
+     * @param content - an object with content for response
+     */
     public static void sendSuccessResponse(
             HttpServletResponse response,
             Object content

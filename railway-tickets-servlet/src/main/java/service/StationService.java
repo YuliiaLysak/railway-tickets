@@ -8,6 +8,11 @@ import repository.StationRepository;
 
 import java.util.List;
 
+/**
+ * Used for processing operations with stations
+ *
+ * @author Yuliia Lysak
+ */
 public class StationService {
     private final StationRepository stationRepository;
 
@@ -33,6 +38,15 @@ public class StationService {
         stationRepository.updateStationById(stationId, station.getCity(), station.getName());
     }
 
+    /**
+     * Validates information of station.
+     *
+     * @param station - station object for validation.
+     *
+     * @throws BusinessLogicException if station already exists
+     * @throws InputValidationException if station city not present or empty
+     * @throws InputValidationException if station name not present or empty
+     */
     private void validateStationData(Station station) {
         if (stationRepository.findByCityAndName(station.getCity(), station.getName()) != null) {
             throw new BusinessLogicException("exception.station.exist");
@@ -45,6 +59,16 @@ public class StationService {
         }
     }
 
+    /**
+     * Gets PageableResponse object of stations
+     *
+     * @see PageableResponse
+     *
+     * @param pageNo - number of current page
+     * @param pageSize - size of a page
+     *
+     * @return PageableResponse object with station list, number of current page and total pages
+     */
     // TODO - add tests for this method
     public PageableResponse<Station> getAllStationsPaginated(int pageNo, int pageSize) {
         List<Station> stations = stationRepository.findAllPaginated(pageNo - 1, pageSize);
