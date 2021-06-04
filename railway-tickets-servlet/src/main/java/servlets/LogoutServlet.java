@@ -1,5 +1,6 @@
 package servlets;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,9 +20,11 @@ public class LogoutServlet extends HttpServlet {
     protected void doGet(
             HttpServletRequest request,
             HttpServletResponse response
-    ) throws IOException {
+    ) throws IOException, ServletException {
         request.getSession().invalidate();
-
-        response.sendRedirect(request.getContextPath() + "/");
+        request.setAttribute("signedOut", "signedOut");
+        request.getServletContext()
+                .getRequestDispatcher("/WEB-INF/views/login.jsp")
+                .forward(request, response);
     }
 }

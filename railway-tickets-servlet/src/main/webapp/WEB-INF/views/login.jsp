@@ -107,13 +107,13 @@
 
 
 <div class="signup-form">
-    <div style="color: red">
-        <c:if test="${param.error}">
+    <div class="text-center" style="color: red">
+        <c:if test="${not empty invalidSignin}">
             <fmt:message key="invalidSignin"/>
         </c:if>
     </div>
-    <div>
-        <c:if test="${param.logout}">
+    <div class="text-center">
+        <c:if test="${not empty signedOut}">
             <fmt:message key="signedOut"/>
         </c:if>
     </div>

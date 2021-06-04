@@ -42,28 +42,35 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(
             HttpServletRequest request,
             HttpServletResponse response
-    ) throws IOException {
+    ) throws IOException, ServletException {
 
         UserService userService = ServiceLocator.getUserService();
         User user = userService.findByEmailAndPassword(
                 request.getParameter("email"),
                 request.getParameter("password")
         );
-        if (user != null) {
-            HttpSession session = request.getSession();
-            SessionUser sessionUser = new SessionUser(
-                    user.getId(),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getRoles());
-            session.setAttribute("sessionUser", sessionUser);
 
-            String redirectAfterLogin = (String) session.getAttribute("redirectAfterLogin");
-            if (redirectAfterLogin != null) {
-                session.removeAttribute("redirectAfterLogin");
-                response.sendRedirect(request.getContextPath() + redirectAfterLogin);
-                return;
-            }
+        if (user == null) {
+            request.setAttribute("invalidSignin", "invalidSignin");
+            request.getServletContext()
+                    .getRequestDispatcher("/WEB-INF/views/login.jsp")
+                    .forward(request, response);
+            return;
+        }
+
+        HttpSession session = request.getSession();
+        SessionUser sessionUser = new SessionUser(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getRoles());
+        session.setAttribute("sessionUser", sessionUser);
+
+        String redirectAfterLogin = (String) session.getAttribute("redirectAfterLogin");
+        if (redirectAfterLogin != null) {
+            session.removeAttribute("redirectAfterLogin");
+            response.sendRedirect(request.getContextPath() + redirectAfterLogin);
+            return;
         }
 
         response.sendRedirect(request.getContextPath() + "/");
