@@ -46,8 +46,8 @@ function renderSearchResultLine(route) {
                              <div class="row">${route.arrivalStationName}</div>
                          </div>
                          <div class="col-sm">
-                            <div class="row">${route.departureDateTime}</div>
-                            <div class="row">${route.arrivalDateTime}</div>
+                            <div class="row">${formatDate(route.departureDateTime)}</div>
+                            <div class="row">${formatDate(route.arrivalDateTime)}</div>
                          </div>
                          <div class="col-sm">${route.duration}</div>
                          <div class="col-sm">
@@ -63,4 +63,8 @@ function renderSearchResultLine(route) {
                      </div>
                  </div>
              </li>`;
+}
+
+function formatDate(date) {
+    return moment(date).format('DD.MM.YYYY HH:mm');
 }

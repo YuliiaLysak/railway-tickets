@@ -16,6 +16,9 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-i18n-properties@1.2.7/jquery.i18n.properties.min.js"></script>
 
+    <!-- Moment.js for formatting dates -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+
     <title th:text="#{route}">Route</title>
 
     <link rel="stylesheet" href="/style.css">
@@ -131,11 +134,11 @@
                 </tr>
                 <tr>
                     <td th:text="#{departureDateTime}">Departure time</td>
-                    <th th:text="${routeDto.getDepartureDateTime()}"></th>
+                    <th th:text="${#temporals.format(routeDto.getDepartureDateTime(), 'dd.MM.yyyy HH:mm')}"></th>
                 </tr>
                 <tr>
                     <td th:text="#{arrivalDateTime}">Arrival time</td>
-                    <th th:text="${routeDto.getArrivalDateTime()}"></th>
+                    <th th:text="${#temporals.format(routeDto.getArrivalDateTime(), 'dd.MM.yyyy HH:mm')}"></th>
                 </tr>
                 <tr>
                     <td th:text="#{duration}">Duration</td>

@@ -280,7 +280,7 @@ function renderRouteLine(route, selectedRouteId, index) {
                                 <div class="row ms-2">${route.departureStation.city} (${route.departureStation.name})</div>
                                 <div class="row ms-2">${route.arrivalStation.city} (${route.arrivalStation.name})</div>
                             </div>
-                            <div class="col-3">${route.departureTime}</div>
+                            <div class="col-3">${formatDate(route.departureTime)}</div>
                         </button>
                     </h2>
                     <div id="${collapseId}" class="${bodyClass}"
@@ -298,11 +298,11 @@ function renderRouteLine(route, selectedRouteId, index) {
                                 </tr>
                                 <tr>
                                     <td>${i18n('departureDateTime')}</td>
-                                    <th>${route.departureTime}</th>
+                                    <th>${formatDate(route.departureTime)}</th>
                                 </tr>
                                 <tr>
                                     <td>${i18n('arrivalDateTime')}</td>
-                                    <th>${route.arrivalTime}</th>
+                                    <th>${formatDate(route.arrivalTime)}</th>
                                 </tr>
                                 <tr>
                                     <td>${i18n('trainName')}</td>
@@ -344,4 +344,8 @@ function renderPageNumber(pageNo, totalPages, text, activeClass) {
 function getTotalPages() {
     let $pageElement = $('.page-item.active > .page-link')[0];
     return $($pageElement).data('page-total') || 1;
+}
+
+function formatDate(date) {
+    return moment(date).format('DD.MM.YYYY HH:mm');
 }

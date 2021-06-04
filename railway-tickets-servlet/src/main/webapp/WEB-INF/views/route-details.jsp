@@ -144,11 +144,13 @@
                 </tr>
                 <tr>
                     <td><fmt:message key="departureDateTime"/></td>
-                    <th>${routeDto.getDepartureDateTime()}</th>
+                    <fmt:parseDate value="${routeDto.getDepartureDateTime()}" type="both" pattern="yyyy-MM-dd'T'HH:mm" var="departureDateTime" />
+                    <th><fmt:formatDate value="${departureDateTime}" pattern="dd.MM.yyyy HH:mm"/></th>
                 </tr>
                 <tr>
                     <td><fmt:message key="arrivalDateTime"/></td>
-                    <th>${routeDto.getArrivalDateTime()}</th>
+                    <fmt:parseDate value="${routeDto.getArrivalDateTime()}" type="both" pattern="yyyy-MM-dd'T'HH:mm" var="arrivalDateTime" />
+                    <th><fmt:formatDate value="${arrivalDateTime}" pattern="dd.MM.yyyy HH:mm"/></th>
                 </tr>
                 <tr>
                     <td><fmt:message key="duration"/></td>
