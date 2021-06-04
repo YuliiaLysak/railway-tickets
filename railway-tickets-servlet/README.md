@@ -20,8 +20,10 @@
   ```
   mvn clean install
   ```
-- задеплоїти отриманий артефакт в Tomcat ./target/railway-tickets-servlet-1.0-SNAPSHOT.war
-
+- задеплоїти отриманий артефакт в Tomcat
+  ```
+  ./target/railway-tickets-servlet-1.0-SNAPSHOT.war
+  ```
 - відкрити посилання в браузері
   ```
   http://localhost:8080
