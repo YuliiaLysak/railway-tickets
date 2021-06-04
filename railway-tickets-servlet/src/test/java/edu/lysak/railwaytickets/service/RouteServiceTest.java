@@ -1,5 +1,6 @@
 package edu.lysak.railwaytickets.service;
 
+import edu.lysak.railwaytickets.dto.PageableResponse;
 import edu.lysak.railwaytickets.dto.RouteDto;
 import edu.lysak.railwaytickets.dto.SearchRouteRequestDto;
 import edu.lysak.railwaytickets.dto.SearchRouteResponseDto;
@@ -7,14 +8,17 @@ import edu.lysak.railwaytickets.exceptions.BusinessLogicException;
 import edu.lysak.railwaytickets.exceptions.InputValidationException;
 import edu.lysak.railwaytickets.model.Route;
 import edu.lysak.railwaytickets.model.Station;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
 import edu.lysak.railwaytickets.repository.RouteRepository;
 import edu.lysak.railwaytickets.repository.StationRepository;
 import edu.lysak.railwaytickets.repository.TicketRepository;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,6 +58,24 @@ public class RouteServiceTest {
 
         verify(routeRepository).findAll();
         assertThat(actual).isSameAs(expected);
+    }
+
+    @Test
+    @DisplayName("#getAllRoutesPaginated(int, int) should return all routes as pageable object")
+    void getAllRoutesPaginated_ShouldReturnAllRoutesAsPageableObject() {
+        List<Route> expected = List.of(Route.builder().build());
+        given(routeRepository.findAllPaginated(anyInt(), anyInt())).willReturn(expected);
+        int routeCount = 1;
+        given(routeRepository.countRouteRecords()).willReturn(routeCount);
+
+        int pageNo = 1;
+        PageableResponse<Route> routesPaginated = routeService.getAllRoutesPaginated(pageNo, 10);
+
+        verify(routeRepository).findAllPaginated(pageNo - 1, 10);
+        verify(routeRepository).countRouteRecords();
+        assertThat(routesPaginated.getContent()).isEqualTo(expected);
+        assertThat(routesPaginated.getTotalPages()).isEqualTo(1);
+        assertThat(routesPaginated.getCurrentPage()).isEqualTo(1);
     }
 
     @Test

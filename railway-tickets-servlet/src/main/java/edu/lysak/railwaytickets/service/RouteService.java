@@ -54,7 +54,6 @@ public class RouteService {
      *
      * @return PageableResponse object with route list, number of current page and total pages
      */
-    // TODO - add tests for this method
     public PageableResponse<Route> getAllRoutesPaginated(int pageNo, int pageSize) {
         List<Route> routes = routeRepository.findAllPaginated(pageNo - 1, pageSize);
         int routeCount = routeRepository.countRouteRecords();

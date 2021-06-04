@@ -69,7 +69,6 @@ public class StationService {
      *
      * @return PageableResponse object with station list, number of current page and total pages
      */
-    // TODO - add tests for this method
     public PageableResponse<Station> getAllStationsPaginated(int pageNo, int pageSize) {
         List<Station> stations = stationRepository.findAllPaginated(pageNo - 1, pageSize);
         int stationCount = stationRepository.countStationRecords();

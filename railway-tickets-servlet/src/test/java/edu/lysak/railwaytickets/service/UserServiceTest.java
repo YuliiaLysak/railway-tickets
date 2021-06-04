@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
@@ -52,16 +53,17 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("#addUser(User) should return false if new user was not added")
-    public void addUser_ShouldReturnFalseIfUserWithThisEmailAlreadyExist() {
+    @DisplayName("#addUser(User) should throw BusinessLogicException if user with this email already exists")
+    public void addUser_ShouldThrowExceptionIfUserWithThisEmailAlreadyExist() {
         User user = createUser();
         given(userRepository.findByEmail(any())).willReturn(user);
 
-        boolean result = userService.addUser(user);
+        assertThatThrownBy(() -> userService.addUser(user))
+                .isInstanceOf(BusinessLogicException.class)
+                .hasMessageContaining("exception.user.exist");
 
         verify(userRepository).findByEmail(user.getEmail());
         verify(userRepository, never()).save(user);
-        assertThat(result).isFalse();
     }
 
     @Test

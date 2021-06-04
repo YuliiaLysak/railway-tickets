@@ -35,7 +35,7 @@ public class UserService {
     public boolean addUser(User user) {
         User userFromDb = userRepository.findByEmail(user.getEmail());
         if (userFromDb != null) {
-            throw new BusinessLogicException("User with this email already exists");
+            throw new BusinessLogicException("exception.user.exist");
         }
         user.setRoles(Collections.singleton(Role.USER));
         user.setPassword(encode(user.getPassword()));

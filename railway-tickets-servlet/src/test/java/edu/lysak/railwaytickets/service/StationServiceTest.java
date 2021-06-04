@@ -1,15 +1,16 @@
 package edu.lysak.railwaytickets.service;
 
+import edu.lysak.railwaytickets.dto.PageableResponse;
 import edu.lysak.railwaytickets.exceptions.BusinessLogicException;
 import edu.lysak.railwaytickets.exceptions.InputValidationException;
 import edu.lysak.railwaytickets.model.Station;
+import edu.lysak.railwaytickets.repository.StationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import edu.lysak.railwaytickets.repository.StationRepository;
 
 import java.util.List;
 
@@ -37,6 +38,27 @@ class StationServiceTest {
 
         verify(stationRepository).findAll();
         assertThat(expected).isEqualTo(actual);
+    }
+
+    @Test
+    @DisplayName("#getAllStationsPaginated(int, int) should return all stations as pageable object")
+    void getAllStationsPaginated_ShouldReturnAllStationsAsPageableObject() {
+        List<Station> expected = List.of(
+                createStation(1L, "Kyiv", "Kyiv-Pas"),
+                createStation(2L, "Lviv", "Lviv-Holovny")
+        );
+        given(stationRepository.findAllPaginated(anyInt(), anyInt())).willReturn(expected);
+        int stationCount = 2;
+        given(stationRepository.countStationRecords()).willReturn(stationCount);
+
+        int pageNo = 1;
+        PageableResponse<Station> stationsPaginated = stationService.getAllStationsPaginated(pageNo, 10);
+
+        verify(stationRepository).findAllPaginated(pageNo - 1, 10);
+        verify(stationRepository).countStationRecords();
+        assertThat(stationsPaginated.getContent()).isEqualTo(expected);
+        assertThat(stationsPaginated.getTotalPages()).isEqualTo(1);
+        assertThat(stationsPaginated.getCurrentPage()).isEqualTo(1);
     }
 
     @Test
