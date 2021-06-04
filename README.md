@@ -32,28 +32,28 @@
 Якщо користувач зареєстрований в системі, то він повинен мати можливість купити білет на вибраний маршрут на вказану дату (за умови наявності вільних місць).
 
 ### Main page
-![Main page](https://github.com/YuliiaLysak/railway-tickets/tree/main/doc/main-page-unauthorized.png?raw=true)
+![Main page](https://github.com/YuliiaLysak/railway-tickets/blob/main/doc/main-page-unauthorized.png?raw=true)
 
 ### Search result
-![Search result](https://github.com/YuliiaLysak/railway-tickets/tree/main/doc/search-result.png?raw=true)
+![Search result](https://github.com/YuliiaLysak/railway-tickets/blob/main/doc/search-result.png?raw=true)
 
 ### Route information - for unauthorized users
-![Route info unauthorized](https://github.com/YuliiaLysak/railway-tickets/tree/main/doc/route-info-unauthorized.png?raw=true)
+![Route info unauthorized](https://github.com/YuliiaLysak/railway-tickets/blob/main/doc/route-info-unauthorized.png?raw=true)
 
 ### Route information with opportunity to buy a ticket - for authorized users
-![Route info authorized](https://github.com/YuliiaLysak/railway-tickets/tree/main/doc/buying-ticket.png?raw=true)
+![Route info authorized](https://github.com/YuliiaLysak/railway-tickets/blob/main/doc/buying-ticket.png?raw=true)
 
 ### Sign in page
-![Sign in](https://github.com/YuliiaLysak/railway-tickets/tree/main/doc/sign-in.png?raw=true)
+![Sign in](https://github.com/YuliiaLysak/railway-tickets/blob/main/doc/sign-in.png?raw=true)
 
 ### Stations page for admin
-![Stations for admin](https://github.com/YuliiaLysak/railway-tickets/tree/main/doc/admin-page-stations.png?raw=true)
+![Stations for admin](https://github.com/YuliiaLysak/railway-tickets/blob/main/doc/admin-page-stations.png?raw=true)
 
 ### Routes page for admin
-![Routes for admin](https://github.com/YuliiaLysak/railway-tickets/tree/main/doc/admin-page-routes.png?raw=true)
+![Routes for admin](https://github.com/YuliiaLysak/railway-tickets/blob/main/doc/admin-page-routes.png?raw=true)
 
 ### Access forbidden for authorized user
-![403 forbidden](https://github.com/YuliiaLysak/railway-tickets/tree/main/doc/403-forbidden-error-page.png?raw=true)
+![403 forbidden](https://github.com/YuliiaLysak/railway-tickets/blob/main/doc/403-forbidden-error-page.png?raw=true)
 
 ### Page not found
-![404 not found](https://github.com/YuliiaLysak/railway-tickets/tree/main/doc/404-not-found-error-page.png?raw=true)
+![404 not found](https://github.com/YuliiaLysak/railway-tickets/blob/main/doc/404-not-found-error-page.png?raw=true)
