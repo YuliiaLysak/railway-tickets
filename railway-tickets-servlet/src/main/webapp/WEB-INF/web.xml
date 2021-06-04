@@ -15,7 +15,7 @@
 
     <servlet>
         <servlet-name>StationServlet</servlet-name>
-        <servlet-class>servlets.StationServlet</servlet-class>
+        <servlet-class>edu.lysak.railwaytickets.servlets.StationServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>StationServlet</servlet-name>
@@ -24,7 +24,7 @@
 
     <servlet>
         <servlet-name>RouteServlet</servlet-name>
-        <servlet-class>servlets.RouteServlet</servlet-class>
+        <servlet-class>edu.lysak.railwaytickets.servlets.RouteServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RouteServlet</servlet-name>
@@ -33,7 +33,7 @@
 
     <servlet>
         <servlet-name>TicketServlet</servlet-name>
-        <servlet-class>servlets.TicketServlet</servlet-class>
+        <servlet-class>edu.lysak.railwaytickets.servlets.TicketServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>TicketServlet</servlet-name>
@@ -42,7 +42,7 @@
 
     <servlet>
         <servlet-name>RegistrationServlet</servlet-name>
-        <servlet-class>servlets.RegistrationServlet</servlet-class>
+        <servlet-class>edu.lysak.railwaytickets.servlets.RegistrationServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RegistrationServlet</servlet-name>
@@ -51,7 +51,7 @@
 
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>servlets.LoginServlet</servlet-class>
+        <servlet-class>edu.lysak.railwaytickets.servlets.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -60,7 +60,7 @@
 
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>servlets.LogoutServlet</servlet-class>
+        <servlet-class>edu.lysak.railwaytickets.servlets.LogoutServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
@@ -69,7 +69,7 @@
 
     <servlet>
         <servlet-name>AdminServlet</servlet-name>
-        <servlet-class>servlets.AdminServlet</servlet-class>
+        <servlet-class>edu.lysak.railwaytickets.servlets.AdminServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AdminServlet</servlet-name>
@@ -78,7 +78,7 @@
 
     <servlet>
         <servlet-name>RouteInfoServlet</servlet-name>
-        <servlet-class>servlets.RouteInfoServlet</servlet-class>
+        <servlet-class>edu.lysak.railwaytickets.servlets.RouteInfoServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RouteInfoServlet</servlet-name>
@@ -87,7 +87,7 @@
 
     <servlet>
         <servlet-name>RouteSearchServlet</servlet-name>
-        <servlet-class>servlets.RouteSearchServlet</servlet-class>
+        <servlet-class>edu.lysak.railwaytickets.servlets.RouteSearchServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RouteSearchServlet</servlet-name>
@@ -96,7 +96,7 @@
 
     <servlet>
         <servlet-name>I18nServlet</servlet-name>
-        <servlet-class>servlets.I18nServlet</servlet-class>
+        <servlet-class>edu.lysak.railwaytickets.servlets.I18nServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>I18nServlet</servlet-name>
@@ -105,7 +105,7 @@
 
     <filter>
         <filter-name>AuthenticationFilter</filter-name>
-        <filter-class>filter.AuthenticationFilter</filter-class>
+        <filter-class>edu.lysak.railwaytickets.filter.AuthenticationFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AuthenticationFilter</filter-name>
@@ -114,7 +114,7 @@
 
     <filter>
         <filter-name>ExceptionFilter</filter-name>
-        <filter-class>filter.ExceptionFilter</filter-class>
+        <filter-class>edu.lysak.railwaytickets.filter.ExceptionFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>ExceptionFilter</filter-name>
@@ -123,7 +123,7 @@
 
     <filter>
         <filter-name>EncodingFilter</filter-name>
-        <filter-class>filter.EncodingFilter</filter-class>
+        <filter-class>edu.lysak.railwaytickets.filter.EncodingFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>EncodingFilter</filter-name>
@@ -132,7 +132,7 @@
 
     <filter>
         <filter-name>I18nFilter</filter-name>
-        <filter-class>filter.I18nFilter</filter-class>
+        <filter-class>edu.lysak.railwaytickets.filter.I18nFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>I18nFilter</filter-name>
@@ -141,7 +141,7 @@
 
     <filter>
         <filter-name>AnalyticFilter</filter-name>
-        <filter-class>filter.AnalyticFilter</filter-class>
+        <filter-class>edu.lysak.railwaytickets.filter.AnalyticFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AnalyticFilter</filter-name>
@@ -150,7 +150,7 @@
 
     <listener>
         <description>Session Listener for analytical purposes</description>
-        <listener-class>listener.AnalyticSessionListener</listener-class>
+        <listener-class>edu.lysak.railwaytickets.listener.AnalyticSessionListener</listener-class>
     </listener>
 
 </web-app>
