@@ -14,6 +14,8 @@ import edu.lysak.railwaytickets.repository.TicketRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -118,37 +120,11 @@ public class RouteServiceTest {
         assertThat(routeForSaving.getPricePerSeat()).isEqualTo(100.0);
     }
 
-    // TODO - replace with @ParametrizedTest
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if departureStation is empty")
-    public void addNewRoute_ShouldThrowExceptionIfDepartureStationEmpty() {
-        RouteDto routeDto = createRouteDtoWithStations(null, 2L);
-
-        assertThatThrownBy(() -> routeService.addNewRoute(routeDto))
-                .isInstanceOf(InputValidationException.class)
-                .hasMessageContaining("exception.station.empty");
-
-        verify(routeRepository, never()).save(any());
-    }
-
-    // TODO - replace with @ParametrizedTest
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if arrivalStation is empty")
-    public void addNewRoute_ShouldThrowExceptionIfArrivalStationEmpty() {
-        RouteDto routeDto = createRouteDtoWithStations(1L, null);
-
-        assertThatThrownBy(() -> routeService.addNewRoute(routeDto))
-                .isInstanceOf(InputValidationException.class)
-                .hasMessageContaining("exception.station.empty");
-
-        verify(routeRepository, never()).save(any());
-    }
-
-    // TODO - replace with @ParametrizedTest
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if departureStation and arrivalStation are empty")
-    public void addNewRoute_ShouldThrowExceptionIfDepartureAndArrivalStationEmpty() {
-        RouteDto routeDto = createRouteDtoWithStations(null, null);
+    @ParameterizedTest(name = "{index} => departureStationId = {0}, arrivalStationId = {1}")
+    @CsvSource({", 2", "1,", ","})
+    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if departureStation, arrivalStation or both are empty")
+    public void addNewRoute_ShouldThrowExceptionIfAnyOrBothStationEmpty(Long departureStationId, Long arrivalStationId) {
+        RouteDto routeDto = createRouteDtoWithStations(departureStationId, arrivalStationId);
 
         assertThatThrownBy(() -> routeService.addNewRoute(routeDto))
                 .isInstanceOf(InputValidationException.class)
@@ -202,13 +178,14 @@ public class RouteServiceTest {
         verify(routeRepository, never()).save(any());
     }
 
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if departureTime is empty")
-    public void addNewRoute_ShouldThrowExceptionIfDepartureTimeEmpty() {
+    @ParameterizedTest(name = "{index} => departureTime = {0}, arrivalTime = {1}")
+    @CsvSource({", 2021-07-20T17:36:18.229438", "2021-07-20T17:36:18.229438,", ","})
+    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if departureTime, arrivalTime or both are empty")
+    public void addNewRoute_ShouldThrowExceptionIfAnyOrBothTimeEmpty(LocalDateTime departureTime, LocalDateTime arrivalTime) {
         Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
         Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
-                1L, 2L, null, LocalDateTime.now()
+                1L, 2L, departureTime, arrivalTime
         );
         given(stationRepository.findById(1L)).willReturn(Optional.of(departureStation));
         given(stationRepository.findById(2L)).willReturn(Optional.of(arrivalStation));
@@ -222,74 +199,14 @@ public class RouteServiceTest {
         verify(routeRepository, never()).save(any());
     }
 
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if arrivalTime is empty")
-    public void addNewRoute_ShouldThrowExceptionIfArrivalTimeEmpty() {
+    @ParameterizedTest(name = "{index} => departureTime = {0}, arrivalTime = {1}")
+    @CsvSource({"2021-07-20T17:36:18.229438, 2021-07-18T17:36:18.229438", "2021-07-20T17:36:18.229438, 2021-07-20T17:36:18.229438"})
+    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if arrivalTime is before or equal departureTime")
+    public void addNewRoute_ShouldThrowExceptionIfArrivalTimeBeforeOrEqualDepartureTime(LocalDateTime departureTime, LocalDateTime arrivalTime) {
         Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
         Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
-                1L, 2L, LocalDateTime.now(), null
-        );
-        given(stationRepository.findById(1L)).willReturn(Optional.of(departureStation));
-        given(stationRepository.findById(2L)).willReturn(Optional.of(arrivalStation));
-
-        assertThatThrownBy(() -> routeService.addNewRoute(routeDto))
-                .isInstanceOf(InputValidationException.class)
-                .hasMessageContaining("exception.time.empty");
-
-        verify(stationRepository).findById(1L);
-        verify(stationRepository).findById(2L);
-        verify(routeRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if departureTime and arrivalTime are empty")
-    public void addNewRoute_ShouldThrowExceptionIfDepartureAndArrivalTimeEmpty() {
-        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
-        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
-        RouteDto routeDto = createRouteDtoWithStationsAndTime(
-                1L, 2L, null, null
-        );
-        given(stationRepository.findById(1L)).willReturn(Optional.of(departureStation));
-        given(stationRepository.findById(2L)).willReturn(Optional.of(arrivalStation));
-
-        assertThatThrownBy(() -> routeService.addNewRoute(routeDto))
-                .isInstanceOf(InputValidationException.class)
-                .hasMessageContaining("exception.time.empty");
-
-        verify(stationRepository).findById(1L);
-        verify(stationRepository).findById(2L);
-        verify(routeRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if arrivalTime is before departureTime")
-    public void addNewRoute_ShouldThrowExceptionIfArrivalTimeBeforeDepartureTime() {
-        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
-        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
-        RouteDto routeDto = createRouteDtoWithStationsAndTime(
-                1L, 2L, LocalDateTime.now(), LocalDateTime.now().minusHours(1)
-        );
-        given(stationRepository.findById(1L)).willReturn(Optional.of(departureStation));
-        given(stationRepository.findById(2L)).willReturn(Optional.of(arrivalStation));
-
-        assertThatThrownBy(() -> routeService.addNewRoute(routeDto))
-                .isInstanceOf(InputValidationException.class)
-                .hasMessageContaining("exception.time.before");
-
-        verify(stationRepository).findById(1L);
-        verify(stationRepository).findById(2L);
-        verify(routeRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if departureTime and arrivalTime are the same")
-    public void addNewRoute_ShouldThrowExceptionIfDepartureAndArrivalTimeSame() {
-        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
-        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
-        LocalDateTime time = LocalDateTime.now();
-        RouteDto routeDto = createRouteDtoWithStationsAndTime(
-                1L, 2L, time, time
+                1L, 2L, departureTime, arrivalTime
         );
         given(stationRepository.findById(1L)).willReturn(Optional.of(departureStation));
         given(stationRepository.findById(2L)).willReturn(Optional.of(arrivalStation));
@@ -325,9 +242,10 @@ public class RouteServiceTest {
         verify(routeRepository, never()).save(any());
     }
 
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if totalSeats is empty")
-    public void addNewRoute_ShouldThrowExceptionIfTotalSeatsEmpty() {
+    @ParameterizedTest(name = "{index} => totalSeats = {0}")
+    @CsvSource(value = {"-200", "0", "null"}, nullValues = {"null"})
+    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if totalSeats <= 0 or empty")
+    public void addNewRoute_ShouldThrowExceptionIfTotalSeatsLessOrEqualZeroOrEmpty(Integer totalSeats) {
         Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
         Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         LocalDateTime time = LocalDateTime.now();
@@ -335,7 +253,7 @@ public class RouteServiceTest {
                 1L, 2L, time, time.plusHours(5)
         );
         routeDto.setTrainName("Hogwarts Express");
-        routeDto.setTotalSeats(null);
+        routeDto.setTotalSeats(totalSeats);
         given(stationRepository.findById(1L)).willReturn(Optional.of(departureStation));
         given(stationRepository.findById(2L)).willReturn(Optional.of(arrivalStation));
 
@@ -348,55 +266,10 @@ public class RouteServiceTest {
         verify(routeRepository, never()).save(any());
     }
 
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if totalSeats is less than 0")
-    public void addNewRoute_ShouldThrowExceptionIfTotalSeatsLessThanZero() {
-        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
-        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
-        LocalDateTime time = LocalDateTime.now();
-        RouteDto routeDto = createRouteDtoWithStationsAndTime(
-                1L, 2L, time, time.plusHours(5)
-        );
-        routeDto.setTrainName("Hogwarts Express");
-        routeDto.setTotalSeats(-200);
-        given(stationRepository.findById(1L)).willReturn(Optional.of(departureStation));
-        given(stationRepository.findById(2L)).willReturn(Optional.of(arrivalStation));
-
-        assertThatThrownBy(() -> routeService.addNewRoute(routeDto))
-                .isInstanceOf(InputValidationException.class)
-                .hasMessageContaining("exception.seats.negative");
-
-        verify(stationRepository).findById(1L);
-        verify(stationRepository).findById(2L);
-        verify(routeRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if totalSeats is 0")
-    public void addNewRoute_ShouldThrowExceptionIfTotalSeatsZero() {
-        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
-        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
-        LocalDateTime time = LocalDateTime.now();
-        RouteDto routeDto = createRouteDtoWithStationsAndTime(
-                1L, 2L, time, time.plusHours(5)
-        );
-        routeDto.setTrainName("Hogwarts Express");
-        routeDto.setTotalSeats(0);
-        given(stationRepository.findById(1L)).willReturn(Optional.of(departureStation));
-        given(stationRepository.findById(2L)).willReturn(Optional.of(arrivalStation));
-
-        assertThatThrownBy(() -> routeService.addNewRoute(routeDto))
-                .isInstanceOf(InputValidationException.class)
-                .hasMessageContaining("exception.seats.negative");
-
-        verify(stationRepository).findById(1L);
-        verify(stationRepository).findById(2L);
-        verify(routeRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if pricePerSeat is empty")
-    public void addNewRoute_ShouldThrowExceptionIfPricePerSeatEmpty() {
+    @ParameterizedTest(name = "{index} => pricePerSeat = {0}")
+    @CsvSource(value = {"-200.0", "0", "null"}, nullValues = {"null"})
+    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if pricePerSeat <= 0 or empty")
+    public void addNewRoute_ShouldThrowExceptionIfPricePerSeatLessThanZeroOrEmpty(Double pricePerSeat) {
         Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
         Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         LocalDateTime time = LocalDateTime.now();
@@ -405,55 +278,7 @@ public class RouteServiceTest {
         );
         routeDto.setTrainName("Hogwarts Express");
         routeDto.setTotalSeats(200);
-        routeDto.setPricePerSeat(null);
-        given(stationRepository.findById(1L)).willReturn(Optional.of(departureStation));
-        given(stationRepository.findById(2L)).willReturn(Optional.of(arrivalStation));
-
-        assertThatThrownBy(() -> routeService.addNewRoute(routeDto))
-                .isInstanceOf(InputValidationException.class)
-                .hasMessageContaining("exception.price.negative");
-
-        verify(stationRepository).findById(1L);
-        verify(stationRepository).findById(2L);
-        verify(routeRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if pricePerSeat is less than 0")
-    public void addNewRoute_ShouldThrowExceptionIfPricePerSeatLessThanZero() {
-        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
-        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
-        LocalDateTime time = LocalDateTime.now();
-        RouteDto routeDto = createRouteDtoWithStationsAndTime(
-                1L, 2L, time, time.plusHours(5)
-        );
-        routeDto.setTrainName("Hogwarts Express");
-        routeDto.setTotalSeats(200);
-        routeDto.setPricePerSeat(-200.0);
-        given(stationRepository.findById(1L)).willReturn(Optional.of(departureStation));
-        given(stationRepository.findById(2L)).willReturn(Optional.of(arrivalStation));
-
-        assertThatThrownBy(() -> routeService.addNewRoute(routeDto))
-                .isInstanceOf(InputValidationException.class)
-                .hasMessageContaining("exception.price.negative");
-
-        verify(stationRepository).findById(1L);
-        verify(stationRepository).findById(2L);
-        verify(routeRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if pricePerSeat is 0")
-    public void addNewRoute_ShouldThrowExceptionIfPricePerSeatZero() {
-        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
-        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
-        LocalDateTime time = LocalDateTime.now();
-        RouteDto routeDto = createRouteDtoWithStationsAndTime(
-                1L, 2L, time, time.plusHours(5)
-        );
-        routeDto.setTrainName("Hogwarts Express");
-        routeDto.setTotalSeats(200);
-        routeDto.setPricePerSeat(0.0);
+        routeDto.setPricePerSeat(pricePerSeat);
         given(stationRepository.findById(1L)).willReturn(Optional.of(departureStation));
         given(stationRepository.findById(2L)).willReturn(Optional.of(arrivalStation));
 
