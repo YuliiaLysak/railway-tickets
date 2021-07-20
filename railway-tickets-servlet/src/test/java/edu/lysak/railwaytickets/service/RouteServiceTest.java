@@ -84,8 +84,8 @@ public class RouteServiceTest {
         LocalDateTime departureTime = LocalDateTime.now();
         LocalDateTime arrivalTime = departureTime.plusHours(7);
 
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
 
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L,
@@ -205,8 +205,8 @@ public class RouteServiceTest {
     @Test
     @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if departureTime is empty")
     public void addNewRoute_ShouldThrowExceptionIfDepartureTimeEmpty() {
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L, 2L, null, LocalDateTime.now()
         );
@@ -225,8 +225,8 @@ public class RouteServiceTest {
     @Test
     @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if arrivalTime is empty")
     public void addNewRoute_ShouldThrowExceptionIfArrivalTimeEmpty() {
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L, 2L, LocalDateTime.now(), null
         );
@@ -245,8 +245,8 @@ public class RouteServiceTest {
     @Test
     @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if departureTime and arrivalTime are empty")
     public void addNewRoute_ShouldThrowExceptionIfDepartureAndArrivalTimeEmpty() {
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L, 2L, null, null
         );
@@ -265,8 +265,8 @@ public class RouteServiceTest {
     @Test
     @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if arrivalTime is before departureTime")
     public void addNewRoute_ShouldThrowExceptionIfArrivalTimeBeforeDepartureTime() {
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L, 2L, LocalDateTime.now(), LocalDateTime.now().minusHours(1)
         );
@@ -285,8 +285,8 @@ public class RouteServiceTest {
     @Test
     @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if departureTime and arrivalTime are the same")
     public void addNewRoute_ShouldThrowExceptionIfDepartureAndArrivalTimeSame() {
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         LocalDateTime time = LocalDateTime.now();
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L, 2L, time, time
@@ -306,8 +306,8 @@ public class RouteServiceTest {
     @Test
     @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if trainName is empty")
     public void addNewRoute_ShouldThrowExceptionIfTrainNameEmpty() {
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         LocalDateTime time = LocalDateTime.now();
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L, 2L, time, time.plusHours(5)
@@ -328,8 +328,8 @@ public class RouteServiceTest {
     @Test
     @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if totalSeats is empty")
     public void addNewRoute_ShouldThrowExceptionIfTotalSeatsEmpty() {
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         LocalDateTime time = LocalDateTime.now();
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L, 2L, time, time.plusHours(5)
@@ -351,8 +351,8 @@ public class RouteServiceTest {
     @Test
     @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if totalSeats is less than 0")
     public void addNewRoute_ShouldThrowExceptionIfTotalSeatsLessThanZero() {
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         LocalDateTime time = LocalDateTime.now();
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L, 2L, time, time.plusHours(5)
@@ -374,8 +374,8 @@ public class RouteServiceTest {
     @Test
     @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if totalSeats is 0")
     public void addNewRoute_ShouldThrowExceptionIfTotalSeatsZero() {
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         LocalDateTime time = LocalDateTime.now();
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L, 2L, time, time.plusHours(5)
@@ -397,8 +397,8 @@ public class RouteServiceTest {
     @Test
     @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if pricePerSeat is empty")
     public void addNewRoute_ShouldThrowExceptionIfPricePerSeatEmpty() {
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         LocalDateTime time = LocalDateTime.now();
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L, 2L, time, time.plusHours(5)
@@ -421,8 +421,8 @@ public class RouteServiceTest {
     @Test
     @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if pricePerSeat is less than 0")
     public void addNewRoute_ShouldThrowExceptionIfPricePerSeatLessThanZero() {
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         LocalDateTime time = LocalDateTime.now();
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L, 2L, time, time.plusHours(5)
@@ -445,8 +445,8 @@ public class RouteServiceTest {
     @Test
     @DisplayName("#addNewRoute(RouteDto) should throw InputValidationException if pricePerSeat is 0")
     public void addNewRoute_ShouldThrowExceptionIfPricePerSeatZero() {
-        Station departureStation = createStation(1L, null, null);
-        Station arrivalStation = createStation(2L, null, null);
+        Station departureStation = createStation(1L, "Kyiv", "Kyiv-Pas");
+        Station arrivalStation = createStation(2L, "Lviv", "Lviv-Pas");
         LocalDateTime time = LocalDateTime.now();
         RouteDto routeDto = createRouteDtoWithStationsAndTime(
                 1L, 2L, time, time.plusHours(5)
